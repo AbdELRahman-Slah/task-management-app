@@ -1,0 +1,14 @@
+{
+  "name": "task-management-app",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently -n \"client,server\" -c \"cyan,green\" \"npm run dev --prefix client\" \"npm run start --prefix server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
