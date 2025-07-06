@@ -12,20 +12,19 @@ app.use("/users", userRouter);
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 3000;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 connectDB()
-  .catch((err) => console.log(err))
   .then(() => {
     console.log("Connected to Database");
-  });
+  })
+  .catch((err) => console.log(err));
 
 async function connectDB() {
   await mongoose.connect(MONGODB_URI);
 }
 
 app.use((error, req, res, next) => {
-  console.log(error);
   res.status(error.statusCode || 500).json({
     status: error.status || "fail",
     message: error.message || "Something went wrong!",
