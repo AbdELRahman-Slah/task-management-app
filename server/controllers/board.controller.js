@@ -19,7 +19,7 @@ const getBoardById = catchWrapper(async (req, res, next) => {
   const board = await Board.findById(boardId, { __v: 0 });
 
   if (!board) {
-    next(new AppError("Board doesn't exist"));
+    return next(new AppError("Board doesn't exist"));
   }
 
   res.status(200).json({
@@ -62,7 +62,7 @@ const updateBoard = catchWrapper(async (req, res, next) => {
   );
 
   if (!updatedBoard) {
-    next(new AppError("Board doesn't exist", 404));
+    return next(new AppError("Board doesn't exist", 404));
   }
 
   res.status(200).json({
@@ -76,11 +76,11 @@ const deleteBoard = catchWrapper(async (req, res, next) => {
 
   const deletedBoard = await Board.deleteOne({ _id: boardId });
 
-  if (deletedBoard.deletedCount == 0) {
-    next(new AppError("Board doesn't exist", 404));
+  if (deletedBoard.deletedCount === 0) {
+    return next(new AppError("Board doesn't exist", 404));
   }
 
-  res.status(204).json({
+  res.status(200).json({
     status: "success",
     data: null,
   });
