@@ -10,6 +10,6 @@ const userRouter = express.Router();
 
 userRouter
   .post("/register", userRegisterValidation(), validate, registerUser)
-  .get("/login", userLoginValidation(), validate, loginUser);
+  .post("/login", userLoginValidation(), validate, loginUser);
 
 module.exports = userRouter;
