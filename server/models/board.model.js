@@ -6,17 +6,18 @@ const boardSchema = new Schema(
       type: String,
       require: true,
     },
-    admins: [
+    users: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        require: true,
-      },
-    ],
-    members: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+        id: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          require: true,
+        },
+        role: {
+          type: String,
+          enum: ["ADMIN", "MEMBER"],
+          default: "MEMBER",
+        },
       },
     ],
     icon: String,

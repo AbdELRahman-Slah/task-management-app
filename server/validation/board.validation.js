@@ -12,27 +12,20 @@ const createBoardValidation = () => [
     .isString()
     .withMessage("Title must be a string"),
 
-  body("admins")
-    .notEmpty({ ignore_whitespace: true })
-    .withMessage("Admins are required")
+  body("users")
     .isArray({ min: 1 })
-    .withMessage("Admins must be an array"),
-  body("admins.*")
+    .withMessage("users must be an array of at least on element"),
+
+  body("users.*.id")
     .isMongoId()
-    .withMessage("Admin ID is not valid")
+    .withMessage("user ID is not valid")
     .bail()
     .custom(checkUserExists),
 
-  body("members") // TODO: Check if member is not an admin
+  body("users.*.role")
     .optional()
-    .isArray()
-    .withMessage("Members must be an array"),
-  body("members.*")
-    .optional()
-    .isMongoId()
-    .withMessage("Member ID is not valid")
-    .bail()
-    .custom(checkUserExists),
+    .isIn(["ADMIN", "MEMBER"])
+    .withMessage("Role is not valid"),
 
   body("icon").optional().isString().withMessage("Icon must be a string"),
 ];
@@ -45,29 +38,22 @@ const updateBoardValidation = () => [
     .isString()
     .withMessage("Title must be a string"),
 
-  body("admins")
+  body("users")
     .optional()
-    .notEmpty({ ignore_whitespace: true })
-    .withMessage("Admins are required")
     .isArray({ min: 1 })
-    .withMessage("Admins must be an array"),
-  body("admins.*")
+    .withMessage("users must be an array of at least on element"),
+
+  body("users.*.id")
     .optional()
     .isMongoId()
-    .withMessage("Admin ID is not valid")
+    .withMessage("user ID is not valid")
     .bail()
     .custom(checkUserExists),
 
-  body("members") // TODO: Check if member is not an admin
+  body("users.*.role")
     .optional()
-    .isArray()
-    .withMessage("Members must be an array"),
-  body("members.*")
-    .optional()
-    .isMongoId()
-    .withMessage("Member ID is not valid")
-    .bail()
-    .custom(checkUserExists),
+    .isIn(["ADMIN", "MEMBER"])
+    .withMessage("Role is not valid"),
 
   body("icon").optional().isString().withMessage("Icon must be a string"),
 ];

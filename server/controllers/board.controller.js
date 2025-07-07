@@ -29,12 +29,11 @@ const getBoardById = catchWrapper(async (req, res, next) => {
 });
 
 const createBoard = catchWrapper(async (req, res) => {
-  const { title, admins, members, icon } = req.body;
+  const { title, users, icon } = req.body;
 
   const newBoard = await Board.create({
     title,
-    admins,
-    members,
+    users,
     icon,
   });
 
@@ -46,14 +45,13 @@ const createBoard = catchWrapper(async (req, res) => {
 
 const updateBoard = catchWrapper(async (req, res, next) => {
   const boardId = req.params.id;
-  const { title, admins, members, icon } = req.body;
+  const { title, users, icon } = req.body;
 
   const updatedBoard = await Board.findOneAndUpdate(
     { _id: boardId },
     {
       title,
-      admins,
-      members,
+      users,
       icon,
     },
     {

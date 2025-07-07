@@ -22,7 +22,7 @@ boardRouter
   .get("/", getAllBoards)
   .get("/:id", getAndDeleteBoardByIdValidation(), validate, getBoardById)
   .post("/", createBoardValidation(), validate, createBoard)
-  .put("/:id", updateBoardValidation(), validate, updateBoard)
+  .patch("/:id", updateBoardValidation(), validate, updateBoard)
   .delete("/:id", getAndDeleteBoardByIdValidation(), validate, deleteBoard);
 
 module.exports = boardRouter;
