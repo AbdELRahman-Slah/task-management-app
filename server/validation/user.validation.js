@@ -4,15 +4,19 @@ const userRegisterValidation = () => {
   return [
     body("firstName")
       .isString()
-      .trim()
-      .notEmpty()
+      .withMessage("First name must be a string")
+      .notEmpty({ ignore_whitespace: true })
       .withMessage("First name is required"),
-    body("lastName").isString().notEmpty().withMessage("Last name is required"),
+    body("lastName")
+      .isString()
+      .withMessage("Last name must be a string")
+      .notEmpty()
+      .withMessage("Last name is required"),
     body("email")
       .notEmpty()
-      .isString()
+      .withMessage("Email is required")
       .isEmail()
-      .withMessage("Email is required"),
+      .withMessage("Email is not valid"),
     body("password")
       .notEmpty()
       .isString()
@@ -27,10 +31,8 @@ const userLoginValidation = () => {
       .notEmpty()
       .withMessage("Email is required")
       .bail()
-      .isString()
-      .withMessage("Email must be a string")
       .isEmail()
-      .withMessage("Email must be valid"),
+      .withMessage("Email is not valid"),
 
     body("password")
       .notEmpty()
