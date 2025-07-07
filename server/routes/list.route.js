@@ -11,8 +11,11 @@ const {
   updateListValidation,
 } = require("../validation/list.validation");
 const validate = require("../middlewares/validate.middleware");
+const cardRouter = require("./card.route");
 
 const listRouter = express.Router({ mergeParams: true });
+
+listRouter.use("/:listId/cards", cardRouter);
 
 listRouter
   .get("/", getAndDeleteListValidation(), validate, getAllLists)

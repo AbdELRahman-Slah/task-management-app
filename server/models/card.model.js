@@ -5,9 +5,9 @@ const cardSchema = new Schema(
     title: String,
     description: String,
     coverImage: String,
-    list: { type: Schema.Types.ObjectId, ref: "List" },
+    listId: { type: Schema.Types.ObjectId, ref: "List", require: true },
     position: Number,
-    label: [
+    labels: [
       {
         title: String,
         color: String,
