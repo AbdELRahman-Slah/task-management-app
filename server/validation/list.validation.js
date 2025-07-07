@@ -2,7 +2,11 @@ const { param, body } = require("express-validator");
 const checkBoardExists = require("../utils/validators/boardExists.validator");
 
 const getAndDeleteListValidation = () => [
-  param("boardId").isMongoId().withMessage("Board ID is not valid"),
+  param("boardId")
+    .isMongoId()
+    .withMessage("Board ID is not valid")
+    .bail()
+    .custom(checkBoardExists),
 ];
 
 const createListValidation = () => [

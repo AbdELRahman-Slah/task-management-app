@@ -1,4 +1,4 @@
-const { header, param, body, check } = require("express-validator");
+const { param, body } = require("express-validator");
 const checkUserExists = require("../utils/validators/userExists.validator");
 
 const getAndDeleteBoardByIdValidation = () => [

@@ -33,8 +33,8 @@ const updateList = catchWrapper(async (req, res, next) => {
   const listId = req.params.id;
 
   const updatedList = await List.findOneAndUpdate(
-    { _id: listId },
-    { title, boardId, position, color },
+    { _id: listId, boardId },
+    { title, position, color },
     { new: true }
   );
 
@@ -49,9 +49,10 @@ const updateList = catchWrapper(async (req, res, next) => {
 });
 
 const deleteList = catchWrapper(async (req, res, next) => {
+  const boardId = req.params.boardId;
   const listId = req.params.id;
 
-  const deletedListQuery = await List.deleteOne({ _id: listId });
+  const deletedListQuery = await List.deleteOne({ _id: listId, boardId });
 
   if (deletedListQuery.deletedCount === 0) {
     return next(new AppError("List doesn't exist", 404));
