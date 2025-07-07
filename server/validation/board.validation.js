@@ -1,5 +1,5 @@
 const { header, param, body, check } = require("express-validator");
-const checkUserExists = require("../utils/validator/userExists.validator");
+const checkUserExists = require("../utils/validators/userExists.validator");
 
 const getAndDeleteBoardByIdValidation = () => {
   return param("id").isMongoId().withMessage("ID is not Valid");

@@ -11,8 +11,11 @@ const {
   createAndPutBoardValidation,
 } = require("../validation/board.validation");
 const validate = require("../middlewares/validate.middleware");
+const listRouter = require("./list.route");
 
 const boardRouter = express.Router();
+
+boardRouter.use("/:boardId/lists", listRouter);
 
 boardRouter
   .get("/", getAllBoards)
