@@ -27,13 +27,13 @@ const loginUser = catchWrapper(async (req, res, next) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    next(new AppError("User doesn't not exist", 404));
+    return next(new AppError("User doesn't not exist", 404));
   }
 
   const passwordIsMatched = await bcrypt.compare(password, user.password);
 
   if (!passwordIsMatched) {
-    next(new AppError("Password is incorrect", 401));
+    return next(new AppError("Password is incorrect", 401));
   }
 
   res.status(200).json({
