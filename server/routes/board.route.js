@@ -8,7 +8,8 @@ const {
 } = require("../controllers/board.controller");
 const {
   getAndDeleteBoardByIdValidation,
-  createAndPutBoardValidation,
+  createBoardValidation,
+  updateBoardValidation,
 } = require("../validation/board.validation");
 const validate = require("../middlewares/validate.middleware");
 const listRouter = require("./list.route");
@@ -20,8 +21,8 @@ boardRouter.use("/:boardId/lists", listRouter);
 boardRouter
   .get("/", getAllBoards)
   .get("/:id", getAndDeleteBoardByIdValidation(), validate, getBoardById)
-  .post("/", createAndPutBoardValidation(), validate, createBoard)
-  .put("/:id", createAndPutBoardValidation(), validate, updateBoard)
+  .post("/", createBoardValidation(), validate, createBoard)
+  .put("/:id", updateBoardValidation(), validate, updateBoard)
   .delete("/:id", getAndDeleteBoardByIdValidation(), validate, deleteBoard);
 
 module.exports = boardRouter;
