@@ -8,7 +8,7 @@ const app = express();
 const httpSever = createServer(app);
 
 app.use(express.json());
-app.use("/users", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/boards", boardRouter);
 
 require("dotenv").config();
