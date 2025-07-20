@@ -23,7 +23,7 @@ const createList = catchWrapper(async (req, res, next) => {
 
   res.status(201).json({
     status: "success",
-    data: newList,
+    data: {lists: newList},
   });
 });
 
@@ -44,7 +44,7 @@ const updateList = catchWrapper(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    data: updatedList,
+    data: {list: updatedList},
   });
 });
 

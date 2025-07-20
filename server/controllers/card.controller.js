@@ -17,7 +17,7 @@ const createCard = catchWrapper(async (req, res, next) => {
 
   res.status(201).json({
     status: "success",
-    data: createdCard,
+    data: { card: createdCard },
   });
 });
 
@@ -45,7 +45,7 @@ const updateCard = catchWrapper(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    data: updatedCard,
+    data: { card: updatedCard },
   });
 });
 
