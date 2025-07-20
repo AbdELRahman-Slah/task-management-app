@@ -12,6 +12,7 @@ const {
   updateBoardValidation,
 } = require("../validation/board.validation");
 const validate = require("../middlewares/validate.middleware");
+const verifyUserToken = require("../middlewares/verifyUserToken");
 const listRouter = require("./list.route");
 
 const boardRouter = express.Router();
@@ -19,10 +20,28 @@ const boardRouter = express.Router();
 boardRouter.use("/:boardId/lists", listRouter);
 
 boardRouter
-  .get("/", getAllBoards)
-  .get("/:id", getAndDeleteBoardByIdValidation(), validate, getBoardById)
-  .post("/", createBoardValidation(), validate, createBoard)
-  .patch("/:id", updateBoardValidation(), validate, updateBoard)
-  .delete("/:id", getAndDeleteBoardByIdValidation(), validate, deleteBoard);
+  .get("/", verifyUserToken, getAllBoards)
+  .get(
+    "/:id",
+    getAndDeleteBoardByIdValidation(),
+    validate,
+    verifyUserToken,
+    getBoardById
+  )
+  .post("/", createBoardValidation(), validate, verifyUserToken, createBoard)
+  .patch(
+    "/:id",
+    updateBoardValidation(),
+    validate,
+    verifyUserToken,
+    updateBoard
+  )
+  .delete(
+    "/:id",
+    getAndDeleteBoardByIdValidation(),
+    validate,
+    verifyUserToken,
+    deleteBoard
+  );
 
 module.exports = boardRouter;

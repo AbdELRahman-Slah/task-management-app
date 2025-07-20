@@ -3,9 +3,9 @@ const Board = require("../models/board.model");
 const AppError = require("../utils/AppError");
 
 const getAllBoards = catchWrapper(async (req, res) => {
-  //TODO: Get UserId from JWT To Filter Boards
+  const { userId } = req.user; // req.user was set in verifyUserToken.js file
 
-  const boards = await Board.find({}, { __v: 0 });
+  const boards = await Board.find({ "users.id": userId }, { __v: 0 });
 
   res.status(200).json({
     status: "success",
@@ -15,68 +15,111 @@ const getAllBoards = catchWrapper(async (req, res) => {
 
 const getBoardById = catchWrapper(async (req, res, next) => {
   const boardId = req.params.id;
+  const { userId } = req.user; // req.user was set in verifyUserToken.js file
 
-  const board = await Board.findById(boardId, { __v: 0 });
+  const board = await Board.findOne({ _id: boardId, "users.id": userId });
 
   if (!board) {
-    return next(new AppError("Board doesn't exist"));
+    return next(new AppError("Board doesn't exist", 404));
   }
 
   res.status(200).json({
     status: "success",
-    data: board,
+    data: { board },
   });
 });
 
-const createBoard = catchWrapper(async (req, res) => {
+const createBoard = catchWrapper(async (req, res, next) => {
   const { title, users, icon } = req.body;
+  const { userId } = req.user; // req.user was set in verifyUserToken.js file
+
+  const filteredUsers = users.filter(
+    ({ id }) => id.toString() !== userId.toString()
+  );
 
   const newBoard = await Board.create({
     title,
-    users,
+    users: [
+      {
+        id: userId,
+        role: "ADMIN", // Make the user that creates the board ADMIN by default
+      },
+      ...filteredUsers,
+    ],
     icon,
   });
 
   res.status(201).json({
     status: "success",
-    data: newBoard,
+    data: {
+      board: newBoard,
+    },
   });
 });
 
 const updateBoard = catchWrapper(async (req, res, next) => {
   const boardId = req.params.id;
   const { title, users, icon } = req.body;
+  const { userId } = req.user; // req.user was set in verifyUserToken.js file
 
-  const updatedBoard = await Board.findOneAndUpdate(
-    { _id: boardId },
-    {
-      title,
-      users,
-      icon,
-    },
-    {
-      new: true,
-    }
-  );
+  const board = await Board.findOne({ _id: boardId, "users.id": userId });
 
-  if (!updatedBoard) {
+  if (!board) {
     return next(new AppError("Board doesn't exist", 404));
   }
 
+  const userRole = board.users.find(
+    ({ id }) => String(id) === String(userId)
+  ).role;
+
+  if (userRole !== "ADMIN") {
+    return next(new AppError("Admins only can update the board", 403));
+  }
+
+  const filteredUsers = users.filter(
+    ({ id }) => id.toString() !== userId.toString()
+  );
+
+  const updatedBoardQuery = await board.updateOne({
+    title,
+    users: [
+      {
+        id: userId,
+        role: userRole,
+      },
+      ...filteredUsers,
+    ],
+    icon,
+  });
+
+  if (updatedBoardQuery.modifiedCount === 0)
+    return next(new AppError("Board couldn't be updated"));
+
   res.status(200).json({
     status: "success",
-    data: updatedBoard,
+    data: null,
   });
 });
 
 const deleteBoard = catchWrapper(async (req, res, next) => {
   const boardId = req.params.id;
+  const { userId } = req.user; // req.user was set in verifyUserToken.js file
 
-  const deletedBoard = await Board.deleteOne({ _id: boardId });
+  const board = await Board.findById(boardId);
 
-  if (deletedBoard.deletedCount === 0) {
+  if (!board) {
     return next(new AppError("Board doesn't exist", 404));
   }
+
+  const userInBoard = board.users.find(
+    (user) => String(user.id) === userId && user.role === "ADMIN"
+  );
+
+  if (!userInBoard) {
+    return next(new AppError("You are not an admin of this board", 403));
+  }
+
+  await Board.deleteOne({ _id: boardId });
 
   res.status(200).json({
     status: "success",

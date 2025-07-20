@@ -4,14 +4,15 @@ const mongoose = require("mongoose");
 const userRouter = require("./routes/user.route");
 const boardRouter = require("./routes/board.route");
 
+require("dotenv").config();
+
 const app = express();
 const httpSever = createServer(app);
+
 
 app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/boards", boardRouter);
-
-require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
