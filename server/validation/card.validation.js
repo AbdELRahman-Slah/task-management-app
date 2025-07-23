@@ -1,13 +1,8 @@
 const { body, param } = require("express-validator");
-const checkBoardExists = require("../utils/validators/boardExists.validator");
 const checkListExist = require("../utils/validators/listExists.validator");
 
 const createAndUpdateCardValidation = () => [
-  param("boardId")
-    .isMongoId()
-    .withMessage("Board ID is not valid")
-    .bail()
-    .custom(checkBoardExists),
+  param("boardId").isMongoId().withMessage("Board ID is not valid"),
 
   param("listId")
     .isMongoId()
@@ -37,6 +32,7 @@ const createAndUpdateCardValidation = () => [
     .withMessage("Title must be a string"),
 
   body("position")
+    .optional()
     .notEmpty()
     .withMessage("Position is required")
     .isNumeric()

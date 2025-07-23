@@ -10,6 +10,8 @@ const {
 } = require("../validation/card.validation");
 const validate = require("../middlewares/validate.middleware");
 const validateListInBoard = require("../middlewares/validateListInBoard.middleware");
+const validateBoard = require("../middlewares/validateBoard.middleware");
+const verifyUserToken = require("../middlewares/verifyUserToken");
 
 const cardRouter = express.Router({ mergeParams: true });
 
@@ -18,6 +20,8 @@ cardRouter
     "/",
     createAndUpdateCardValidation(),
     validate,
+    verifyUserToken,
+    validateBoard,
     validateListInBoard,
     createCard
   )
@@ -25,6 +29,8 @@ cardRouter
     "/:id",
     createAndUpdateCardValidation(),
     validate,
+    verifyUserToken,
+    validateBoard,
     validateListInBoard,
     updateCard
   )
@@ -32,6 +38,8 @@ cardRouter
     "/:id",
     deleteCardValidation(),
     validate,
+    verifyUserToken,
+    validateBoard,
     validateListInBoard,
     deleteCard
   );

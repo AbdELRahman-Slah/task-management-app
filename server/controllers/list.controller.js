@@ -5,8 +5,6 @@ const AppError = require("../utils/AppError");
 const getAllLists = catchWrapper(async (req, res, next) => {
   const boardId = req.params.boardId;
 
-  // TODO: Check if they are member of that board or not
-
   const lists = await List.find({ boardId });
 
   res.status(200).json({
