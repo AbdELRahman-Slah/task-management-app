@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const catchWrapper = require("../middlewares/catchWrapper.middleware");
 const Board = require("../models/board.model");
 const AppError = require("../utils/AppError");
@@ -17,12 +18,36 @@ const getBoardById = catchWrapper(async (req, res, next) => {
   const boardId = req.params.id;
   const { userId } = req.user; // req.user was set in verifyUserToken.js file
 
-  const board = await Board.findOne({ _id: boardId, "users.id": userId });
+  const board = await Board.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(`${boardId}`),
+        "users.id": new mongoose.Types.ObjectId(`${userId}`),
+      },
+    },
+    {
+      $lookup: {
+        from: "lists",
+        localField: "_id",
+        foreignField: "boardId",
+        as: "lists",
+        pipeline: [
+          {
+            $lookup: {
+              from: "cards",
+              localField: "_id",
+              foreignField: "listId",
+              as: "cards",
+            },
+          },
+        ],
+      },
+    },
+  ]);
 
-  if (!board) {
+  if (!board.length) {
     return next(new AppError("Board doesn't exist", 404));
   }
-
   res.status(200).json({
     status: "success",
     data: { board },
