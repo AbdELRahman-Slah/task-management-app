@@ -4,10 +4,16 @@ const User = require("../models/user.model");
 const AppError = require("../utils/AppError");
 const generateUserToken = require("../utils/generateUserToken");
 
-const registerUser = catchWrapper(async (req, res) => {
+const registerUser = catchWrapper(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.findOne({ email });
+
+  if (user) {
+    return next(new AppError("User already exists", 400));
+  }
 
   const newUser = await User.create({
     firstName,
@@ -20,7 +26,15 @@ const registerUser = catchWrapper(async (req, res) => {
 
   res.status(200).json({
     status: "success",
-    data: { token },
+    data: {
+      user: {
+        id: newUser._id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+      },
+      token,
+    },
   });
 });
 
@@ -45,6 +59,7 @@ const loginUser = catchWrapper(async (req, res, next) => {
     status: "success",
     data: {
       user: {
+        id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,

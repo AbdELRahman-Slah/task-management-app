@@ -21,6 +21,10 @@ const boardSchema = new Schema(
       },
     ],
     icon: String,
+    background: {
+      type: String,
+      default: "bg-gradient-to-br from-purple-400 to-pink-400",
+    },
   },
   { timestamps: true }
 );

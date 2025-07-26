@@ -3,12 +3,14 @@ const { createServer } = require("http");
 const mongoose = require("mongoose");
 const userRouter = require("./routes/user.route");
 const boardRouter = require("./routes/board.route");
+const cors = require("cors");
 
 require("dotenv").config();
 
 const app = express();
 const httpSever = createServer(app);
 
+app.use(cors());
 
 app.use(express.json());
 app.use("/api/users", userRouter);

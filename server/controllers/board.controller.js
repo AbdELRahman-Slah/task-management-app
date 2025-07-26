@@ -10,7 +10,7 @@ const getAllBoards = catchWrapper(async (req, res) => {
 
   res.status(200).json({
     status: "success",
-    data: boards,
+    data: { boards },
   });
 });
 
@@ -55,7 +55,7 @@ const getBoardById = catchWrapper(async (req, res, next) => {
 });
 
 const createBoard = catchWrapper(async (req, res, next) => {
-  const { title, users, icon } = req.body;
+  const { title, users, icon, background } = req.body;
   const { userId } = req.user; // req.user was set in verifyUserToken.js file
 
   const filteredUsers = users.filter(
@@ -72,6 +72,7 @@ const createBoard = catchWrapper(async (req, res, next) => {
       ...filteredUsers,
     ],
     icon,
+    background,
   });
 
   res.status(201).json({
@@ -115,6 +116,7 @@ const updateBoard = catchWrapper(async (req, res, next) => {
       ...filteredUsers,
     ],
     icon,
+    background,
   });
 
   if (updatedBoardQuery.modifiedCount === 0)
