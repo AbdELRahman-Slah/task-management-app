@@ -10,12 +10,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Ref } from "react";
 
-export const Navbar = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
+export const Navbar = ({
+  isLoggedIn,
+  navbarRef = null,
+}: {
+  isLoggedIn: boolean;
+  navbarRef?: Ref<HTMLElement>;
+}) => {
   const navigate = useNavigate();
 
   return (
-    <nav className="bg-card/80 backdrop-blur-sm border-b border-border/50 px-6 py-4">
+    <nav
+      className="bg-card/80 backdrop-blur-sm border-b border-border/50 px-6 py-4"
+      ref={navbarRef}
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link
           to={isLoggedIn ? "/dashboard" : "/"}

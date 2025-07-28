@@ -25,26 +25,13 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     setNodeRef,
     transform,
     transition,
-    isDragging
+    isDragging,
   } = useSortable({ id: task.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-destructive text-destructive-foreground";
-      case "medium":
-        return "bg-primary text-primary-foreground";
-      case "low":
-        return "bg-muted text-muted-foreground";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
+    opacity: isDragging ? 0.5 : 1,
   };
 
   return (
@@ -61,25 +48,25 @@ export const TaskCard = ({ task }: TaskCardProps) => {
             <h4 className="font-medium text-sm text-foreground leading-snug">
               {task.title}
             </h4>
-            <Badge variant="secondary" className={`text-xs ${getPriorityColor(task.priority)}`}>
+            {/* <Badge variant="secondary" className={`text-xs`}>
               {task.priority}
-            </Badge>
+            </Badge> */}
           </div>
-          
+
           {task.description && (
             <p className="text-xs text-muted-foreground line-clamp-2">
               {task.description}
             </p>
           )}
-          
+
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            {task.assignee && (
+            {/* {task.assignee && (
               <div className="flex items-center gap-1">
                 <User className="h-3 w-3" />
                 <span>{task.assignee}</span>
               </div>
-            )}
-            
+            )} */}
+
             {task.dueDate && (
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
