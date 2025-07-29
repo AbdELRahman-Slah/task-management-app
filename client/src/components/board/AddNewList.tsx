@@ -8,6 +8,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { Textarea } from "../ui/textarea";
+import CustomTextarea from "../CustomTextarea";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const userToken = localStorage.getItem("token");
@@ -51,24 +52,20 @@ export default function AddNewList() {
       <CardContent className="p-4 h-fit">
         {isAddingList ? (
           <form onSubmit={handleSubmit}>
-            <Textarea
+            <CustomTextarea
               placeholder="Enter List Title"
-              autoFocus
               value={listTitle}
               onChange={(e) => setListTitle(e.target.value)}
-              className="mb-4"
-              
+              className="mb-4 min-h-min"
             />
             <div className="flex flex-row gap-3 justify-start">
-              <Button type="submit">
-                Add List
-              </Button>
+              <Button type="submit">Add List</Button>
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => {
                   setIsAddingList(false);
-                  setListTitle('');
+                  setListTitle("");
                 }}
               >
                 <X size={20} strokeWidth={3} />

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, MoreHorizontal, X } from "lucide-react";
-import { TaskCard } from "@/components/TaskCard";
+import { TaskCard } from "@/components/board/TaskCard";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -16,9 +16,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import { useState } from "react";
-import ListHeader from "./board/ListHeader";
+import ListHeader from "./ListHeader";
+import ListDropdownMenu from "./ListDropdownMenu";
 
 interface TaskListProps {
   list: List;
@@ -28,8 +29,6 @@ export const TaskList = ({ list }: TaskListProps) => {
   const { setNodeRef, isOver } = useDroppable({
     id: list._id,
   });
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <Card
@@ -42,33 +41,7 @@ export const TaskList = ({ list }: TaskListProps) => {
           <ListHeader listTitle={list.title} listId={list._id} />
         </CardTitle>
 
-        <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="w-8 h-8 p-0 !mt-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent align="start" className="w-52 p-2 space-y-1">
-            <DropdownMenuLabel>
-              <div className="flex flex-row justify-between items-center">
-                <div>List actions</div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <X size={21} />
-                </Button>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="p-2">Add card</DropdownMenuItem>
-            <DropdownMenuItem className="p-2">Copy list</DropdownMenuItem>
-            <DropdownMenuItem className="p-2">Move list</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ListDropdownMenu listId={list._id} />
       </CardHeader>
 
       <CardContent className="pt-0">

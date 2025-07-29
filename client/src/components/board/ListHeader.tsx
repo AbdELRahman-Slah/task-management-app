@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { SingleListApiResponse } from "@/types/list.types";
+import CustomTextarea from "../CustomTextarea";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -12,16 +13,7 @@ const ListHeader = ({ listTitle, listId }) => {
   const { boardId } = useParams();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(listTitle);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const userToken = localStorage.getItem("token");
-
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight + 2}px`;
-    }
-  }, [title, isEditingTitle]);
 
   const mutation = useMutation({
     mutationFn: (title: string) =>
@@ -45,10 +37,9 @@ const ListHeader = ({ listTitle, listId }) => {
   };
 
   return isEditingTitle ? (
-    <Textarea
+    <CustomTextarea
       className="resize-none break-words min-h-min p-0 rounded-none"
       placeholder="List title"
-      autoFocus
       value={title}
       onChange={(e) => {
         setTitle(e.target.value);
@@ -65,8 +56,6 @@ const ListHeader = ({ listTitle, listId }) => {
       onBlur={() => {
         onSaveChange();
       }}
-      ref={textareaRef}
-      rows={1}
     />
   ) : (
     <button
