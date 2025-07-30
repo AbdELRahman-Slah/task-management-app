@@ -2,13 +2,15 @@ const express = require("express");
 const {
   getAllLists,
   createList,
-  updateList,
+  updateOneList,
+  updateManyLists,
   deleteList,
 } = require("../controllers/list.controller");
 const {
   getAndDeleteListValidation,
   createListValidation,
   updateListValidation,
+  updateManyListsValidation,
 } = require("../validation/list.validation");
 const validate = require("../middlewares/validate.middleware");
 const cardRouter = require("./card.route");
@@ -42,7 +44,15 @@ listRouter
     validate,
     verifyUserToken,
     validateBoard,
-    updateList
+    updateOneList
+  )
+  .patch(
+    "/",
+    updateManyListsValidation(),
+    validate,
+    verifyUserToken,
+    validateBoard,
+    updateManyLists
   )
   .delete(
     "/:id",

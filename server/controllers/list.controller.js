@@ -16,7 +16,7 @@ const getAllLists = catchWrapper(async (req, res, next) => {
         as: "cards",
       },
     },
-  ]);
+  ]).sort({ position: 1 });
 
   res.status(200).json({
     status: "success",
@@ -36,7 +36,7 @@ const createList = catchWrapper(async (req, res, next) => {
   });
 });
 
-const updateList = catchWrapper(async (req, res, next) => {
+const updateOneList = catchWrapper(async (req, res, next) => {
   const { title, position, color } = req.body;
   const boardId = req.params.boardId;
   const listId = req.params.id;
@@ -54,6 +54,25 @@ const updateList = catchWrapper(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: { list: updatedList },
+  });
+});
+
+const updateManyLists = catchWrapper(async (req, res, next) => {
+  const { lists } = req.body;
+  const boardId = req.params.boardId;
+
+  const operations = lists.map((list) => ({
+    updateOne: {
+      filter: { _id: list._id, boardId },
+      update: { $set: { position: Number(list.position) } },
+    },
+  }));
+
+  await List.bulkWrite(operations);
+
+  res.status(200).json({
+    status: "success",
+    data: null,
   });
 });
 
@@ -76,6 +95,7 @@ const deleteList = catchWrapper(async (req, res, next) => {
 module.exports = {
   getAllLists,
   createList,
-  updateList,
+  updateOneList,
+  updateManyLists,
   deleteList,
 };
