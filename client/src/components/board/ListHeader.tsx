@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Textarea } from "../ui/textarea";
-import { title } from "process";
+import { useContext, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { SingleListApiResponse } from "@/types/list.types";
 import CustomTextarea from "../CustomTextarea";
+import { ListsContext } from "@/contexts/ListsContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -13,6 +12,8 @@ const ListHeader = ({ listTitle, listId }) => {
   const { boardId } = useParams();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(listTitle);
+  const { lists, onChangeLists } = useContext(ListsContext);
+
   const userToken = localStorage.getItem("token");
 
   const mutation = useMutation({
@@ -31,9 +32,14 @@ const ListHeader = ({ listTitle, listId }) => {
   });
 
   const onSaveChange = () => {
+    mutation.mutate(title);
+
     setIsEditingTitle(false);
 
-    mutation.mutate(title);
+    const filteredLists = lists.filter(({ _id }) => _id !== listId);
+    const currentList = lists.find(({ _id }) => _id === listId);
+
+    onChangeLists([...filteredLists, { ...currentList, title }]);
   };
 
   return isEditingTitle ? (

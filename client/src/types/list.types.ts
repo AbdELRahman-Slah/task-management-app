@@ -7,6 +7,13 @@ export interface List {
   position: number;
   color: string;
 }
+export interface ListToUpdate {
+  _id: string;
+  title?: string;
+  cards?: Card[];
+  position?: number;
+  color?: string;
+}
 
 export interface SingleListApiResponse {
   status: string;
@@ -22,4 +29,9 @@ export interface ListsApiResponse {
     lists: List[];
   };
   message?: string;
+}
+
+export interface ListsContextType {
+  lists: List[];
+  onChangeLists: (newLists: List[]) => void;
 }

@@ -19,6 +19,7 @@ const CustomTextarea = (props: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
       rows={1}
       style={{
         overflow: "hidden",
+        wordBreak: "break-all",
       }}
       {...props}
     />

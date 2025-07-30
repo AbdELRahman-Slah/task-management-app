@@ -3,7 +3,6 @@ import { Card, CardContent } from "../ui/card";
 import { Link } from "react-router-dom";
 
 const BoardList = ({ boards }) => {
-  console.log(boards);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {boards.map((board) => (

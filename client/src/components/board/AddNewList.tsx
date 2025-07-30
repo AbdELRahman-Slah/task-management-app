@@ -40,38 +40,52 @@ export default function AddNewList() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSaveChange = () => {
     if (listTitle.trim()) {
       mutation.mutate(listTitle.trim());
+
+      setListTitle("");
     }
+
+    setIsAddingList(false);
   };
 
   return (
     <Card className="min-w-[300px] bg-gradient-card backdrop-blur-sm border-border/50 border-dashed h-fit">
       <CardContent className="p-4 h-fit">
         {isAddingList ? (
-          <form onSubmit={handleSubmit}>
+          <>
             <CustomTextarea
               placeholder="Enter List Title"
               value={listTitle}
               onChange={(e) => setListTitle(e.target.value)}
-              className="mb-4 min-h-min"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  onSaveChange();
+                }
+              }}
+              className="mb-4 min-h-min resize-none"
             />
             <div className="flex flex-row gap-3 justify-start">
-              <Button type="submit">Add List</Button>
+              <Button
+                onClick={() => {
+                  onSaveChange();
+                }}
+              >
+                Add List
+              </Button>
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => {
                   setIsAddingList(false);
-                  setListTitle("");
                 }}
               >
                 <X size={20} strokeWidth={3} />
               </Button>
             </div>
-          </form>
+          </>
         ) : (
           <Button
             variant="ghost"

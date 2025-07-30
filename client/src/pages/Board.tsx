@@ -1,48 +1,16 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  closestCorners,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Plus, MoreHorizontal, User } from "lucide-react";
-import { TaskCard } from "@/components/board/TaskCard";
-import { TaskList } from "@/components/board/TaskList";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import AddNewList from "@/components/board/AddNewList";
-import { Card as CardType } from "@/types/card.types";
-import { ListsApiResponse } from "@/types/list.types";
-import ScrollContainer from "react-indiana-drag-scroll";
-const API_URL = import.meta.env.VITE_API_URL;
+import { User } from "lucide-react";
+import Lists from "@/components/board/Lists";
+import { createContext } from "react";
+import { List } from "@/types/list.types";
+import { ListsContext } from "@/contexts/ListsContext";
 
 const Board = () => {
-  const { boardId } = useParams();
-  const [activeTask, setActiveTask] = useState<CardType | null>(null);
   const [boardHeight, setBoardHeight] = useState(0);
   const navbarRef = useRef<HTMLElement>(null);
-  const userToken = localStorage.getItem("token");
-
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: ["lists"],
-    queryFn: () =>
-      axios.get<ListsApiResponse>(`${API_URL}/boards/${boardId}/lists`, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }),
-  });
+  const [lists, setLists] = useState<List[]>();
 
   useLayoutEffect(() => {
     const { height } = navbarRef.current.getBoundingClientRect();
@@ -81,32 +49,9 @@ const Board = () => {
             </Button>
           </div>
         </div>
-
-        {/* <DndContext
-        // collisionDetection={closestCorners}
-        // onDragStart={handleDragStart}
-        // onDragEnd={handleDragEnd}
-        > */}
-        <ScrollContainer
-          className="flex gap-6 px-6 overflow-x-auto select-none flex-grow pb-16 h-full"
-          horizontal
-          vertical={false}
-          hideScrollbars={false}
-          ignoreElements="div"
-        >
-          {data &&
-            data.data.data.lists.map((list) => (
-              <TaskList key={list._id} list={list} />
-            ))}
-
-          {/* Add new list */}
-          <AddNewList />
-        </ScrollContainer>
-
-        {/* <DragOverlay>
-            {activeTask && <TaskCard task={activeTask} />}
-          </DragOverlay> */}
-        {/* </DndContext> */}
+        <ListsContext.Provider value={{ lists, onChangeLists: setLists }}>
+          <Lists />
+        </ListsContext.Provider>
       </div>
     </div>
   );
