@@ -32,7 +32,7 @@ const createList = catchWrapper(async (req, res, next) => {
 
   res.status(201).json({
     status: "success",
-    data: { lists: newList },
+    data: { list: newList },
   });
 });
 
