@@ -12,7 +12,7 @@ const ListHeader = ({ listTitle, listId }) => {
   const { boardId } = useParams();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(listTitle);
-  const { lists, onChangeLists } = useContext(ListsContext);
+  const { lists, setLists } = useContext(ListsContext);
 
   const userToken = localStorage.getItem("token");
 
@@ -31,15 +31,16 @@ const ListHeader = ({ listTitle, listId }) => {
       ),
   });
 
-  const onSaveChange = () => {
+  const handleSaveChange = () => {
     mutation.mutate(title);
 
     setIsEditingTitle(false);
 
-    const filteredLists = lists.filter(({ _id }) => _id !== listId);
-    const currentList = lists.find(({ _id }) => _id === listId);
+    const listsCopy = [...lists];
+    const listToUpdateIndex = listsCopy.findIndex(({ _id }) => listId === _id);
+    listsCopy[listToUpdateIndex].title = title;
 
-    onChangeLists([...filteredLists, { ...currentList, title }]);
+    setLists(listsCopy);
   };
 
   return isEditingTitle ? (
@@ -53,14 +54,14 @@ const ListHeader = ({ listTitle, listId }) => {
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          onSaveChange();
+          handleSaveChange();
         }
       }}
       onFocus={(e) => {
         e.target.select();
       }}
       onBlur={() => {
-        onSaveChange();
+        handleSaveChange();
       }}
     />
   ) : (

@@ -33,5 +33,5 @@ export interface ListsApiResponse {
 
 export interface ListsContextType {
   lists: List[];
-  onChangeLists: (newLists: List[]) => void;
+  setLists: (newLists: List[]) => void;
 }

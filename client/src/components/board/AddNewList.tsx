@@ -2,51 +2,19 @@ import { Plus, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { useState } from "react";
-import { Input } from "../ui/input";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
-import { Textarea } from "../ui/textarea";
 import CustomTextarea from "../CustomTextarea";
-
-const API_URL = import.meta.env.VITE_API_URL;
-const userToken = localStorage.getItem("token");
+import useCreateList from "@/hooks/useCreateList";
 
 export default function AddNewList() {
-  const { boardId } = useParams();
-  const [isAddingList, setIsAddingList] = useState(false);
   const [listTitle, setListTitle] = useState("");
+  const [isAddingList, setIsAddingList] = useState(false);
+  const { isSuccess, isPending, mutate, isError, error } = useCreateList();
 
-  const mutation = useMutation({
-    mutationFn: (listTitle: string) =>
-      axios.post(
-        `${API_URL}/boards/${boardId}/lists`,
-        { title: listTitle, position: 0 },
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      ),
-
-    onSuccess: () => {
-      setIsAddingList(false);
-      setListTitle("");
-      toast({
-        title: "List was added successfully",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const onSaveChange = () => {
+  const handleSaveChange = () => {
     if (listTitle.trim()) {
-      mutation.mutate(listTitle.trim());
-
-      setListTitle("");
+      mutate(listTitle.trim());
     }
-
+    setListTitle("");
     setIsAddingList(false);
   };
 
@@ -62,7 +30,7 @@ export default function AddNewList() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
-                  onSaveChange();
+                  handleSaveChange();
                 }
               }}
               className="mb-4 min-h-min resize-none"
@@ -70,7 +38,7 @@ export default function AddNewList() {
             <div className="flex flex-row gap-3 justify-start">
               <Button
                 onClick={() => {
-                  onSaveChange();
+                  handleSaveChange();
                 }}
               >
                 Add List
@@ -80,6 +48,7 @@ export default function AddNewList() {
                 variant="ghost"
                 onClick={() => {
                   setIsAddingList(false);
+                  setListTitle("");
                 }}
               >
                 <X size={20} strokeWidth={3} />

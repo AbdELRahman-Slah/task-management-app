@@ -27,7 +27,7 @@ const Lists = () => {
   const [activeList, setActiveList] = useState<List>();
   const { isSuccess, isPending, isError, error } = useGetLists();
 
-  const { lists, onChangeLists } = useContext(ListsContext);
+  const { lists, setLists } = useContext(ListsContext);
 
   const { setListsToUpdate } = useUpdateLists();
 
@@ -63,7 +63,7 @@ const Lists = () => {
 
       updateLists(updatedLists);
 
-      onChangeLists(updatedLists);
+      setLists(updatedLists);
     }
   };
 

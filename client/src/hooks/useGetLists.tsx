@@ -9,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const useGetLists = () => {
   const { boardId } = useParams();
-  const { lists, onChangeLists } = useContext(ListsContext);
+  const { lists, setLists } = useContext(ListsContext);
 
   const userToken = localStorage.getItem("token");
 
@@ -26,9 +26,9 @@ const useGetLists = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      onChangeLists(data.lists);
+      setLists(data.lists);
     }
-  }, [isSuccess, data, onChangeLists]);
+  }, [isSuccess, data, setLists]);
 
   return { isSuccess: !!lists, isPending, isError, error };
 };

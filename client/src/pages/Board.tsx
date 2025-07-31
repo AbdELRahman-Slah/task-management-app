@@ -3,7 +3,6 @@ import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import Lists from "@/components/board/Lists";
-import { createContext } from "react";
 import { List } from "@/types/list.types";
 import { ListsContext } from "@/contexts/ListsContext";
 
@@ -49,7 +48,7 @@ const Board = () => {
             </Button>
           </div>
         </div>
-        <ListsContext.Provider value={{ lists, onChangeLists: setLists }}>
+        <ListsContext.Provider value={{ lists, setLists }}>
           <Lists />
         </ListsContext.Provider>
       </div>
