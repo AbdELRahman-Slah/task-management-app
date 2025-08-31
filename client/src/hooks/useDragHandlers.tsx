@@ -4,11 +4,16 @@ import { List } from "@/types/list.types";
 import { DragStartEvent, DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useContext, useState } from "react";
+import useUpdateLists from "./lists/useUpdateLists";
+import useUpdateMultipleCards from "./cards/useUpdateMultipleCards";
 
 const useDragHandlers = () => {
   const { lists, setLists, cards, setCards } = useContext(BoardContext);
   const [activeList, setActiveList] = useState<List>();
   const [activeCard, setActiveCard] = useState<Card>();
+
+  const { mutate: ListsMutate } = useUpdateLists();
+  const { mutate: CardsMutate } = useUpdateMultipleCards();
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     const draggedList = active.data.current?.list;
@@ -45,7 +50,18 @@ const useDragHandlers = () => {
         lists[oldIndex].position = newIndex;
         lists[newIndex].position = oldIndex;
 
-        return arrayMove(lists, oldIndex, newIndex);
+        const newLists = arrayMove(lists, oldIndex, newIndex);
+
+        const newListsWithNewPostions = newLists.map((list, idx) => {
+          return {
+            ...list,
+            position: idx,
+          };
+        });
+
+        ListsMutate(newListsWithNewPostions);
+
+        return newListsWithNewPostions;
       });
     }
     if (
@@ -61,7 +77,18 @@ const useDragHandlers = () => {
         cards[activeCardIndex].position = overCardIndex;
         cards[overCardIndex].position = activeCardIndex;
 
-        return arrayMove(cards, activeCardIndex, overCardIndex);
+        const newCards = arrayMove(cards, activeCardIndex, overCardIndex);
+
+        const newCardsWithNewPostions = newCards.map((card, idx) => {
+          return {
+            ...card,
+            position: idx,
+          };
+        });
+
+        CardsMutate(newCardsWithNewPostions);
+
+        return newCardsWithNewPostions;
       });
     }
 

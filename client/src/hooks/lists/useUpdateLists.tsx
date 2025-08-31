@@ -1,5 +1,5 @@
 import { BoardContext } from "@/contexts/BoardContext";
-import { List } from "@/types/list.types";
+import { List, ListToUpdate } from "@/types/list.types";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext } from "react";
@@ -14,7 +14,7 @@ const useUpdateLists = () => {
   const userToken = localStorage.getItem("token");
 
   const updateListsMutation = useMutation({
-    mutationFn: (listToUpdate: List[]) =>
+    mutationFn: (listToUpdate: ListToUpdate[]) =>
       axios.patch(
         `${API_URL}/boards/${boardId}/lists`,
         { lists: listToUpdate },
@@ -32,7 +32,7 @@ const useUpdateLists = () => {
       return lists.map(
         (list) =>
           updatedListIds.includes(list._id)
-            ? updatedLists.find((list) => list._id === list._id) // Find the updated list that has the same id as the old list
+            ? updatedLists.find((l) => l._id === list._id) // Find the updated list that has the same id as the old list
             : list // Return the old list if it's not updated
       );
     });

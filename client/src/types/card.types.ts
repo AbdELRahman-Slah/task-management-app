@@ -9,6 +9,14 @@ export interface Card {
   position: number;
 }
 
+export interface CardToUpdate {
+  _id: string;
+  title?: string;
+  description?: string;
+  listId?: string;
+  position?: number;
+}
+
 export interface CardsApiResponse {
   status: string;
   data: {
