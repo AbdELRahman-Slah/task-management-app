@@ -2,12 +2,14 @@ const express = require("express");
 const {
   createCard,
   updateCard,
+  updateMultipleCards,
   deleteCard,
   getAllCardsForBoard,
 } = require("../controllers/card.controller");
 const {
   getCardsValidation,
   createAndUpdateCardValidation,
+  updateMultipleCardsValidation,
   deleteCardValidation,
 } = require("../validation/card.validation");
 const validate = require("../middlewares/validate.middleware");
@@ -43,6 +45,15 @@ cardRouter
     validateBoard,
     validateListInBoard,
     updateCard
+  )
+  .patch(
+    "/",
+    updateMultipleCardsValidation(),
+    validate,
+    verifyUserToken,
+    validateBoard,
+    // validateListInBoard,
+    updateMultipleCards
   )
   .delete(
     "/:id",
