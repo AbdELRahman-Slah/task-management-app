@@ -1,46 +1,17 @@
-import { useContext, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import { SingleListApiResponse } from "@/types/list.types";
+import { useState } from "react";
 import CustomTextarea from "../CustomTextarea";
-import { ListsContext } from "@/contexts/ListsContext";
+import useUpdateLists from "@/hooks/lists/useUpdateLists";
+import { List } from "@/types/list.types";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-const ListHeader = ({ listTitle, listId }) => {
-  const { boardId } = useParams();
+const ListHeader = ({ list }: { list: List }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [title, setTitle] = useState(listTitle);
-  const { lists, setLists } = useContext(ListsContext);
+  const [title, setTitle] = useState(list.title);
 
-  const userToken = localStorage.getItem("token");
-
-  const mutation = useMutation({
-    mutationFn: (title: string) =>
-      axios.patch<SingleListApiResponse>(
-        `${API_URL}/boards/${boardId}/lists/${listId}`,
-        {
-          title,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      ),
-  });
+  const { updateLists } = useUpdateLists();
 
   const handleSaveChange = () => {
-    mutation.mutate(title);
-
+    updateLists([list]);
     setIsEditingTitle(false);
-
-    const listsCopy = [...lists];
-    const listToUpdateIndex = listsCopy.findIndex(({ _id }) => listId === _id);
-    listsCopy[listToUpdateIndex].title = title;
-
-    setLists(listsCopy);
   };
 
   return isEditingTitle ? (

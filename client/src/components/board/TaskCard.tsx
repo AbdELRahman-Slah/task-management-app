@@ -1,81 +1,45 @@
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, User } from "lucide-react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { Card as CardType } from "@/types/card.types";
 
-interface Task {
-  id: string;
-  title: string;
-  description?: string;
-  assignee?: string;
-  priority: "low" | "medium" | "high";
-  dueDate?: string;
-  listId: string;
-}
-
-interface TaskCardProps {
-  task: Task;
-}
-
-export const TaskCard = ({ task }: TaskCardProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
+export const TaskCard = ({ card }: { card: CardType }) => {
   return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="mb-3 cursor-grab active:cursor-grabbing bg-card hover:shadow-soft transition-all duration-200 border-border/50"
-    >
+    <Card className="cursor-grab active:cursor-grabbing bg-card hover:shadow-soft border-border/50 h-20 rounded-sm ">
       <CardContent className="p-4">
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-2">
             <h4 className="font-medium text-sm text-foreground leading-snug">
-              {task.title}
+              {card.title}
             </h4>
             {/* <Badge variant="secondary" className={`text-xs`}>
               {task.priority}
             </Badge> */}
           </div>
 
-          {task.description && (
+          {card.description && (
             <p className="text-xs text-muted-foreground line-clamp-2">
-              {task.description}
+              {card.description}
             </p>
           )}
 
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            {/* {task.assignee && (
+          {/* <div className="flex items-center justify-between text-xs text-muted-foreground">
+            {task.assignee && (
               <div className="flex items-center gap-1">
                 <User className="h-3 w-3" />
                 <span>{task.assignee}</span>
               </div>
-            )} */}
+            )}
 
-            {task.dueDate && (
+            {card.dueDate && (
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
-                <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                <span>{new Date(card.dueDate).toLocaleDateString()}</span>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </CardContent>
     </Card>
   );
+
+  return <>{card.title}</>;
 };

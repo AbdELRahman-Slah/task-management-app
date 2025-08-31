@@ -3,14 +3,12 @@ import { Card } from "./card.types";
 export interface List {
   _id: string;
   title: string;
-  cards: Card[];
   position: number;
-  color: string;
+  color?: string;
 }
 export interface ListToUpdate {
   _id: string;
   title?: string;
-  cards?: Card[];
   position?: number;
   color?: string;
 }
@@ -29,9 +27,4 @@ export interface ListsApiResponse {
     lists: List[];
   };
   message?: string;
-}
-
-export interface ListsContextType {
-  lists: List[];
-  setLists: (newLists: List[]) => void;
 }

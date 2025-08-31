@@ -9,29 +9,13 @@ import {
 } from "../ui/dropdown-menu";
 import { MoreHorizontal, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { useMutation } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { ListsContext } from "@/contexts/ListsContext";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import useDeleteList from "@/hooks/lists/useDeleteList";
 
 const ListDropdownMenu = ({ listId }: { listId: string }) => {
-  const { boardId } = useParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { lists, setLists } = useContext(ListsContext);
-
-  const userToken = localStorage.getItem("token");
-
-  const mutation = useMutation({
-    mutationFn: () =>
-      axios.delete(`${API_URL}/boards/${boardId}/lists/${listId}`, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }),
-  });
-
+  const { deleteList } = useDeleteList();
+  
   return (
     <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
       <DropdownMenuTrigger asChild>
@@ -61,10 +45,7 @@ const ListDropdownMenu = ({ listId }: { listId: string }) => {
         <DropdownMenuItem
           className="p-2 data-[highlighted]:bg-red-500 data-[highlighted]:text-white"
           onClick={() => {
-            mutation.mutate();
-
-            const filteredLists = lists.filter(({ _id }) => listId !== _id);
-            setLists(filteredLists);
+            deleteList(listId);
           }}
         >
           Delete list

@@ -1,77 +1,53 @@
 import {
   DndContext,
-  DragEndEvent,
   DragOverlay,
-  DragStartEvent,
   PointerSensor,
   closestCorners,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   horizontalListSortingStrategy,
   SortableContext,
 } from "@dnd-kit/sortable";
 import ScrollContainer from "react-indiana-drag-scroll";
 import AddNewList from "./AddNewList";
 import { TaskList } from "./TaskList";
-import useGetLists from "@/hooks/useGetLists";
-import { useContext, useState } from "react";
+import useGetLists from "@/hooks/lists/useGetLists";
 import SortableList from "./SortableList";
-import { List, ListToUpdate } from "@/types/list.types";
-import useUpdateLists from "@/hooks/useUpdateLists";
-import { ListsContext } from "@/contexts/ListsContext";
+import { TaskCard } from "./TaskCard";
+import { createPortal } from "react-dom";
+import useGetCards from "@/hooks/cards/useGetCards";
+import useDragHandlers from "@/hooks/useDragHandlers";
 
 const Lists = () => {
-  const [activeList, setActiveList] = useState<List>();
-  const { isSuccess, isPending, isError, error } = useGetLists();
+  const {
+    activeList,
+    activeCard,
+    handleDragStart,
+    handleDragEnd,
+    handleDragOver,
+  } = useDragHandlers();
 
-  const { lists, setLists } = useContext(ListsContext);
-
-  const { setListsToUpdate } = useUpdateLists();
-
-  const updateLists = (lists: List[]) => {
-    const listsWithNewPositions: ListToUpdate[] = lists.map((list, idx) => ({
-      _id: list._id,
-      position: idx,
-    }));
-
-    setListsToUpdate(listsWithNewPositions);
-  };
+  const { isSuccess: isListsSuccess, lists } = useGetLists();
+  const { isSuccess: isCardsSuccess, cards } = useGetCards();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 10,
+        distance: 3,
       },
     })
   );
 
   const listIds = lists?.map(({ _id }) => _id);
 
-  const handleDragStart = ({ active }: DragStartEvent) => {
-    setActiveList(lists.find(({ _id }) => active.id === _id));
-  };
-
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    if (active.id !== over.id) {
-      const oldIndex = lists.findIndex(({ _id }) => _id === active.id);
-      const newIndex = lists.findIndex(({ _id }) => _id === over.id);
-
-      const updatedLists = arrayMove(lists, oldIndex, newIndex);
-
-      updateLists(updatedLists);
-
-      setLists(updatedLists);
-    }
-  };
-
-  return isSuccess ? (
+  return isListsSuccess ? (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCorners}
       onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
       <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
@@ -82,17 +58,35 @@ const Lists = () => {
           hideScrollbars={false}
           ignoreElements="div"
         >
-          {lists.map((list) => (
-            <div className="pointer-events-none" key={list._id}>
-              <SortableList id={list._id} list={list} />
-            </div>
-          ))}
+          {lists.map((list) => {
+            const listCards = cards.filter((card) => card.listId === list._id);
 
-          <AddNewList />
+            return (
+              <SortableList
+                cards={listCards}
+                id={list._id}
+                list={list}
+                key={list._id}
+              />
+            );
+          })}
+
+          <AddNewList listsLength={lists.length} />
         </ScrollContainer>
       </SortableContext>
 
-      <DragOverlay>{activeList && <TaskList list={activeList} />}</DragOverlay>
+      {createPortal(
+        <DragOverlay>
+          {activeList && (
+            <TaskList
+              cards={cards.filter((card) => card.listId === activeList._id)}
+              list={activeList}
+            />
+          )}
+          {activeCard && <TaskCard card={activeCard} />}
+        </DragOverlay>,
+        document.body
+      )}
     </DndContext>
   ) : null;
 };

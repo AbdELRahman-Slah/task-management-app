@@ -1,20 +1,20 @@
-import { ListsContext } from "@/contexts/ListsContext";
-import { List, ListsApiResponse } from "@/types/list.types";
+import { ListsApiResponse } from "@/types/list.types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { BoardContext } from "../../contexts/BoardContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useGetLists = () => {
   const { boardId } = useParams();
-  const { lists, setLists } = useContext(ListsContext);
+  const { lists, setLists } = useContext(BoardContext);
 
   const userToken = localStorage.getItem("token");
 
-  const { isPending, isSuccess, isError, data, error } = useQuery({
-    queryKey: ["lists"],
+  const listsQuery = useQuery({
+    queryKey: ["lists", boardId],
     queryFn: () =>
       axios.get<ListsApiResponse>(`${API_URL}/boards/${boardId}/lists`, {
         headers: {
@@ -25,12 +25,12 @@ const useGetLists = () => {
   });
 
   useEffect(() => {
-    if (isSuccess) {
-      setLists(data.lists);
+    if (listsQuery.isSuccess && lists.length === 0) {
+      setLists(listsQuery.data.lists);
     }
-  }, [isSuccess, data, setLists]);
+  }, [listsQuery, lists, setLists]);
 
-  return { isSuccess: !!lists, isPending, isError, error };
+  return { lists, ...listsQuery };
 };
 
 export default useGetLists;

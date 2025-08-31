@@ -3,13 +3,11 @@ import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import Lists from "@/components/board/Lists";
-import { List } from "@/types/list.types";
-import { ListsContext } from "@/contexts/ListsContext";
+import BoardContextProvider from "@/contexts/BoardContextProvider";
 
 const Board = () => {
   const [boardHeight, setBoardHeight] = useState(0);
   const navbarRef = useRef<HTMLElement>(null);
-  const [lists, setLists] = useState<List[]>();
 
   useLayoutEffect(() => {
     const { height } = navbarRef.current.getBoundingClientRect();
@@ -48,9 +46,9 @@ const Board = () => {
             </Button>
           </div>
         </div>
-        <ListsContext.Provider value={{ lists, setLists }}>
+        <BoardContextProvider>
           <Lists />
-        </ListsContext.Provider>
+        </BoardContextProvider>
       </div>
     </div>
   );
