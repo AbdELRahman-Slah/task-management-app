@@ -5,12 +5,14 @@ const {
   updateMultipleCards,
   deleteCard,
   getAllCardsForBoard,
+  deleteMultipleCards,
 } = require("../controllers/card.controller");
 const {
   getCardsValidation,
   createAndUpdateCardValidation,
   updateMultipleCardsValidation,
   deleteCardValidation,
+  deleteMultipleCardsValidation,
 } = require("../validation/card.validation");
 const validate = require("../middlewares/validate.middleware");
 const validateListInBoard = require("../middlewares/validateListInBoard.middleware");
@@ -63,6 +65,15 @@ cardRouter
     validateBoard,
     // validateListInBoard,
     deleteCard
+  )
+  .delete(
+    "/",
+    deleteMultipleCardsValidation(),
+    validate,
+    verifyUserToken,
+    validateBoard,
+    // validateListInBoard, 
+    deleteMultipleCards
   );
 
 module.exports = cardRouter;

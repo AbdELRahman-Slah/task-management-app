@@ -94,7 +94,10 @@ const updateMultipleCardsValidation = () => [
     .notEmpty({ ignore_whitespace: true })
     .withMessage("Position cannot be empty"),
 
-  body("cards.*.labels").optional().isArray().withMessage("Label must be an array"),
+  body("cards.*.labels")
+    .optional()
+    .isArray()
+    .withMessage("Label must be an array"),
 
   body("cards.*.labels.*.title")
     .optional()
@@ -115,9 +118,18 @@ const deleteCardValidation = () => [
   param("id").isMongoId().withMessage("Card ID is not valid"),
 ];
 
+const deleteMultipleCardsValidation = () => [
+  param("boardId").isMongoId().withMessage("Board ID is not valid"),
+
+  body("cardIds").isArray().withMessage("Card IDs must be an array"),
+
+  body("cardIds.*").isMongoId().withMessage("Card ID is not valid"),
+];
+
 module.exports = {
   getCardsValidation,
   createAndUpdateCardValidation,
   updateMultipleCardsValidation,
   deleteCardValidation,
+  deleteMultipleCardsValidation,
 };

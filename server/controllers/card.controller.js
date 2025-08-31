@@ -37,6 +37,7 @@ const createCard = catchWrapper(async (req, res, next) => {
 
 const updateMultipleCards = catchWrapper(async (req, res, next) => {
   const { cards } = req.body;
+  const { boardId } = req.params;
 
   if (!cards || cards.length === 0) {
     return res
@@ -48,7 +49,7 @@ const updateMultipleCards = catchWrapper(async (req, res, next) => {
     updateOne: {
       filter: {
         _id: card._id,
-        boardId: card.boardId,
+        boardId,
       },
       update: { $set: card },
     },
@@ -104,10 +105,30 @@ const deleteCard = catchWrapper(async (req, res, next) => {
   });
 });
 
+const deleteMultipleCards = catchWrapper(async (req, res, next) => {
+  const { cardIds } = req.body;
+  const { boardId } = req.params;
+
+  const deletedCardQuery = await Card.deleteMany({
+    _id: { $in: cardIds },
+    boardId,
+  });
+
+  if (deletedCardQuery.deletedCount === 0) {
+    return next(new AppError("Cards don't exist", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: null,
+  });
+});
+
 module.exports = {
   getAllCardsForBoard,
   createCard,
   updateCard,
   updateMultipleCards,
   deleteCard,
+  deleteMultipleCards,
 };
