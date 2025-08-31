@@ -4,7 +4,7 @@ import { List } from "@/types/list.types";
 import { DragStartEvent, DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useContext, useState } from "react";
-import useUpdateLists from "./lists/useUpdateLists";
+import useUpdateMultipleLists from "./lists/useUpdateMultipleLists";
 import useUpdateMultipleCards from "./cards/useUpdateMultipleCards";
 
 const useDragHandlers = () => {
@@ -12,8 +12,8 @@ const useDragHandlers = () => {
   const [activeList, setActiveList] = useState<List>();
   const [activeCard, setActiveCard] = useState<Card>();
 
-  const { mutate: ListsMutate } = useUpdateLists();
-  const { mutate: CardsMutate } = useUpdateMultipleCards();
+  const { mutate: mutateMultipleLists } = useUpdateMultipleLists();
+  const { mutate: mutateMultipleCards } = useUpdateMultipleCards();
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     const draggedList = active.data.current?.list;
@@ -59,7 +59,7 @@ const useDragHandlers = () => {
           };
         });
 
-        ListsMutate(newListsWithNewPostions);
+        mutateMultipleLists(newListsWithNewPostions);
 
         return newListsWithNewPostions;
       });
@@ -79,16 +79,36 @@ const useDragHandlers = () => {
 
         const newCards = arrayMove(cards, activeCardIndex, overCardIndex);
 
-        const newCardsWithNewPostions = newCards.map((card, idx) => {
-          return {
-            ...card,
-            position: idx,
-          };
-        });
+        const newCardsInActiveList = newCards.filter(
+          (card) => card.listId === active.data.current.card.listId
+        );
 
-        CardsMutate(newCardsWithNewPostions);
+        const newCardsInOverList = newCards.filter(
+          (card) => card.listId === over.data.current.card.listId
+        );
 
-        return newCardsWithNewPostions;
+        const newCardsWithNewPostionsInActiveList = newCardsInActiveList.map(
+          (card, idx) => {
+            return {
+              ...card,
+              position: idx,
+            };
+          }
+        );
+
+        const newCardsWithNewPostionsInOverList = newCardsInOverList.map(
+          (card, idx) => {
+            return {
+              ...card,
+              position: idx,
+            };
+          }
+        );
+
+        mutateMultipleCards(newCardsWithNewPostionsInActiveList);
+        mutateMultipleCards(newCardsWithNewPostionsInOverList);
+
+        return newCards;
       });
     }
 

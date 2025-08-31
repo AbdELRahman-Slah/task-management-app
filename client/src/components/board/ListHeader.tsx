@@ -1,16 +1,16 @@
 import { useState } from "react";
 import CustomTextarea from "../CustomTextarea";
-import useUpdateLists from "@/hooks/lists/useUpdateLists";
+import useUpdateList from "@/hooks/lists/useUpdateList";
 import { List } from "@/types/list.types";
 
 const ListHeader = ({ list }: { list: List }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(list.title);
 
-  const { updateLists } = useUpdateLists();
+  const { updateList } = useUpdateList();
 
   const handleSaveChange = () => {
-    updateLists([list]);
+    updateList({ ...list, title });
     setIsEditingTitle(false);
   };
 

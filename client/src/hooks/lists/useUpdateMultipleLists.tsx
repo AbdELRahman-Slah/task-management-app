@@ -7,13 +7,13 @@ import { useParams } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const useUpdateLists = () => {
+const useUpdateMultipleLists = () => {
   const { boardId } = useParams();
   const { setLists } = useContext(BoardContext);
 
   const userToken = localStorage.getItem("token");
 
-  const updateListsMutation = useMutation({
+  const updateMultipleListsMutation = useMutation({
     mutationFn: (listToUpdate: ListToUpdate[]) =>
       axios.patch(
         `${API_URL}/boards/${boardId}/lists`,
@@ -26,7 +26,7 @@ const useUpdateLists = () => {
       ),
   });
 
-  const updateLists = (updatedLists: List[]) => {
+  const updateMultipleLists = (updatedLists: List[]) => {
     setLists((lists) => {
       const updatedListIds = updatedLists.map((list) => list._id);
       return lists.map(
@@ -36,10 +36,10 @@ const useUpdateLists = () => {
             : list // Return the old list if it's not updated
       );
     });
-    updateListsMutation.mutate(updatedLists);
+    updateMultipleListsMutation.mutate(updatedLists);
   };
 
-  return { updateLists, ...updateListsMutation };
+  return { updateMultipleLists, ...updateMultipleListsMutation };
 };
 
-export default useUpdateLists;
+export default useUpdateMultipleLists;

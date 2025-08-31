@@ -16,7 +16,7 @@ const useUpdateMultipleCards = () => {
   const mutation = useMutation({
     mutationKey: ["updateMultipleCards"],
     mutationFn: (cards: CardToUpdate[]) => {
-      return axios.patch(`${API_URL}/boards/${boardId}/cards`, { cards, boardId }, {
+      return axios.patch(`${API_URL}/boards/${boardId}/cards`, { cards }, {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
