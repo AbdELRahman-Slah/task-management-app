@@ -6,6 +6,7 @@ const cardSchema = new Schema(
     description: String,
     coverImage: String,
     listId: { type: Schema.Types.ObjectId, ref: "List", require: true },
+    boardId: { type: Schema.Types.ObjectId, ref: "Board", require: true },
     position: Number,
     labels: [
       {

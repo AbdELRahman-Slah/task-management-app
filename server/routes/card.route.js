@@ -3,8 +3,10 @@ const {
   createCard,
   updateCard,
   deleteCard,
+  getAllCardsForBoard,
 } = require("../controllers/card.controller");
 const {
+  getCardsValidation,
   createAndUpdateCardValidation,
   deleteCardValidation,
 } = require("../validation/card.validation");
@@ -16,6 +18,14 @@ const verifyUserToken = require("../middlewares/verifyUserToken");
 const cardRouter = express.Router({ mergeParams: true });
 
 cardRouter
+  .get(
+    "/",
+    getCardsValidation(),
+    validate,
+    verifyUserToken,
+    validateBoard,
+    getAllCardsForBoard
+  )
   .post(
     "/",
     createAndUpdateCardValidation(),
@@ -40,7 +50,7 @@ cardRouter
     validate,
     verifyUserToken,
     validateBoard,
-    validateListInBoard,
+    // validateListInBoard,
     deleteCard
   );
 

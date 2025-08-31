@@ -4,7 +4,7 @@ const catchWrapper = require("./catchWrapper.middleware");
 
 const validateListInBoard = catchWrapper(async (req, res, next) => {
   const boardId = req.params.boardId;
-  const listId = req.params.listId;
+  const listId = req.body.listId;
 
   const list = await List.findOne({ _id: listId, boardId });
 

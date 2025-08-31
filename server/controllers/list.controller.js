@@ -6,17 +6,7 @@ const AppError = require("../utils/AppError");
 const getAllLists = catchWrapper(async (req, res, next) => {
   const boardId = req.params.boardId;
 
-  const lists = await List.aggregate([
-    { $match: { boardId: new mongoose.Types.ObjectId(`${boardId}`) } },
-    {
-      $lookup: {
-        from: "cards",
-        localField: "_id",
-        foreignField: "listId",
-        as: "cards",
-      },
-    },
-  ]).sort({ position: 1 });
+  const lists = await List.find({ boardId }).sort({ position: 1 });
 
   res.status(200).json({
     status: "success",

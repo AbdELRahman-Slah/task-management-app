@@ -14,10 +14,12 @@ const {
 const validate = require("../middlewares/validate.middleware");
 const verifyUserToken = require("../middlewares/verifyUserToken");
 const listRouter = require("./list.route");
+const cardRouter = require("./card.route");
 
 const boardRouter = express.Router();
 
 boardRouter.use("/:boardId/lists", listRouter);
+boardRouter.use("/:boardId/cards", cardRouter);
 
 boardRouter
   .get("/", verifyUserToken, getAllBoards)

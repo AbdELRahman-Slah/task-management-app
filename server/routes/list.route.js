@@ -19,8 +19,6 @@ const validateBoard = require("../middlewares/validateBoard.middleware");
 
 const listRouter = express.Router({ mergeParams: true });
 
-listRouter.use("/:listId/cards", cardRouter);
-
 listRouter
   .get(
     "/",

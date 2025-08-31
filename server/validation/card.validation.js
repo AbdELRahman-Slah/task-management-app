@@ -1,10 +1,14 @@
 const { body, param } = require("express-validator");
 const checkListExist = require("../utils/validators/listExists.validator");
 
+const getCardsValidation = () => [
+  param("boardId").isMongoId().withMessage("Board ID is not valid"),
+];
+
 const createAndUpdateCardValidation = () => [
   param("boardId").isMongoId().withMessage("Board ID is not valid"),
 
-  param("listId")
+  body("listId")
     .isMongoId()
     .withMessage("List ID not Valid")
     .bail()
@@ -60,6 +64,7 @@ const deleteCardValidation = () => [
 ];
 
 module.exports = {
+  getCardsValidation,
   createAndUpdateCardValidation,
   deleteCardValidation,
 };
