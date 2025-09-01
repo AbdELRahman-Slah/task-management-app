@@ -2,6 +2,7 @@ import {
   DndContext,
   DragOverlay,
   PointerSensor,
+  TouchSensor,
   closestCorners,
   useSensor,
   useSensors,
@@ -37,7 +38,8 @@ const Lists = () => {
       activationConstraint: {
         distance: 3,
       },
-    })
+    }),
+    useSensor(TouchSensor)
   );
 
   const listIds = lists?.map(({ _id }) => _id);

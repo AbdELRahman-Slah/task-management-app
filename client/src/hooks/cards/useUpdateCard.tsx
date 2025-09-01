@@ -16,7 +16,7 @@ const useUpdateCard = () => {
   const mutation = useMutation({
     mutationFn: (cardData: Card) =>
       axios.patch<SingleCardApiResponse>(
-        `${API_URL}/boards/${boardId}/cards`,
+        `${API_URL}/boards/${boardId}/cards/${cardData._id}`,
         cardData,
         {
           headers: {
@@ -27,9 +27,7 @@ const useUpdateCard = () => {
   });
 
   const updateCard = (card: Card) => {
-    setCards((cards) =>
-      cards.map((c) => (c._id === card._id ? card : c))
-    );
+    setCards((cards) => cards.map((c) => (c._id === card._id ? card : c)));
     mutation.mutate(card);
   };
 

@@ -70,6 +70,7 @@ const Dashboard = () => {
 
         <CreateBoardModal
           isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
           onBoardCreated={() => {
             setIsModalOpen(false);
 

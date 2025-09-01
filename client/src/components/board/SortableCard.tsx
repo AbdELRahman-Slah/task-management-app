@@ -24,7 +24,7 @@ const SortableCard = ({ listId, card }: { card: Card; listId: string }) => {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {!isDragging && <TaskCard card={card} />}
       {isDragging && (
-        <div className=" border-border/50 h-20 bg-card rounded-sm" />
+        <div className=" border-border/50 h-20 bg-card rounded-sm touch-none" />
       )}
     </div>
   );

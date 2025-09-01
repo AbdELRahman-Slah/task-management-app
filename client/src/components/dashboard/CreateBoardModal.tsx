@@ -6,6 +6,7 @@ import axios from "axios";
 
 interface CreateBoardModalProps {
   isOpen: boolean;
+  onClose: () => void;
   onBoardCreated: () => void;
 }
 
@@ -31,6 +32,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
   isOpen,
+  onClose,
   onBoardCreated,
 }) => {
   const userId = JSON.parse(localStorage.getItem("user") as string).id;
@@ -114,12 +116,16 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
               <Button
                 type="button"
                 variant="secondary"
-                onClick={handleSubmit}
                 disabled={loading}
+                onClick={onClose}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={loading || !title}>
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                disabled={loading || !title}
+              >
                 {loading ? "Creating..." : "Create"}
               </Button>
             </div>

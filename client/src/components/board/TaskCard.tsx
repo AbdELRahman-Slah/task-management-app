@@ -1,45 +1,68 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Card as CardType } from "@/types/card.types";
+import { useState } from "react";
+import { Textarea } from "../ui/textarea";
+import useUpdateCard from "@/hooks/cards/useUpdateCard";
+import { Trash2Icon } from "lucide-react";
+import useDeleteCard from "@/hooks/cards/useDeleteCard";
 
 export const TaskCard = ({ card }: { card: CardType }) => {
-  return (
-    <Card className="cursor-grab active:cursor-grabbing bg-card hover:shadow-soft border-border/50 h-20 rounded-sm ">
-      <CardContent className="p-4">
-        <div className="space-y-3">
-          <div className="flex items-start justify-between gap-2">
-            <h4 className="font-medium text-sm text-foreground leading-snug">
-              {card.title}
-            </h4>
-            {/* <Badge variant="secondary" className={`text-xs`}>
-              {task.priority}
-            </Badge> */}
-          </div>
+  const [titleEdit, setTitleEdit] = useState<boolean>(false);
+  const [cardTitle, setCardTitle] = useState<string>(card.title);
 
-          {card.description && (
-            <p className="text-xs text-muted-foreground line-clamp-2">
-              {card.description}
-            </p>
-          )}
+  const { updateCard } = useUpdateCard();
+  const { deleteCard } = useDeleteCard();
 
-          {/* <div className="flex items-center justify-between text-xs text-muted-foreground">
-            {task.assignee && (
-              <div className="flex items-center gap-1">
-                <User className="h-3 w-3" />
-                <span>{task.assignee}</span>
-              </div>
-            )}
+  const handleSaveChange = () => {
+    updateCard({
+      ...card,
+      title: cardTitle,
+    });
+    setTitleEdit(false);
+  };
 
-            {card.dueDate && (
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                <span>{new Date(card.dueDate).toLocaleDateString()}</span>
-              </div>
-            )}
-          </div> */}
+  const handleDeleteCard = () => {
+    deleteCard(card._id);
+  };
+
+  return titleEdit ? (
+    <Textarea
+      value={cardTitle}
+      className="bg-card hover:shadow-soft ring-1 ring-border/50 h-20 rounded-sm p-4 focus:ring-inset focus:ring-primary resize-none "
+      autoFocus
+      onBlur={handleSaveChange}
+      onFocus={(e) => {
+        e.target.select();
+      }}
+      onChange={(e) => setCardTitle(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleSaveChange();
+        }
+      }}
+    />
+  ) : (
+    <Card
+      className="active:cursor-grabbing bg-card hover:shadow-soft border-border/50 h-20 rounded-sm "
+      onClick={() => setTitleEdit(!titleEdit)}
+    >
+      <CardContent className="p-4 h-full">
+        <div className="flex items-start justify-between gap-2 h-full">
+          <h4 className="font-medium text-sm text-foreground leading-snug">
+            {card.title}
+          </h4>
+          <button
+            className="self-center bg-gradient-card hover:bg-red-950 p-2 rounded"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteCard();
+            }}
+          >
+            <Trash2Icon size={20} className="stroke-gray-300" />
+          </button>
         </div>
       </CardContent>
     </Card>
   );
-
-  return <>{card.title}</>;
 };

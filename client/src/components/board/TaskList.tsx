@@ -5,15 +5,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { DraggableAttributes } from "@dnd-kit/core";
 import { List } from "@/types/list.types";
 import ListHeader from "./ListHeader";
 import ListDropdownMenu from "./ListDropdownMenu";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import AddNewCard from "./AddNewCard";
-import { TaskCard } from "./TaskCard";
 import {
   SortableContext,
   verticalListSortingStrategy,
