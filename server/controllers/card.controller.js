@@ -66,9 +66,10 @@ const updateMultipleCards = catchWrapper(async (req, res, next) => {
 const updateCard = catchWrapper(async (req, res, next) => {
   const { title, description, coverImage, position, labels, listId } = req.body;
   const cardId = req.params.id;
+  const { boardId } = req.params;
 
   const updatedCard = await Card.findOneAndUpdate(
-    { _id: cardId },
+    { _id: cardId, boardId },
     {
       title,
       description,

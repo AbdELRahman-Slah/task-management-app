@@ -36,7 +36,7 @@ cardRouter
     validate,
     verifyUserToken,
     validateBoard,
-    validateListInBoard,
+    // validateListInBoard,
     createCard
   )
   .patch(
@@ -45,7 +45,7 @@ cardRouter
     validate,
     verifyUserToken,
     validateBoard,
-    validateListInBoard,
+    // validateListInBoard,
     updateCard
   )
   .patch(
