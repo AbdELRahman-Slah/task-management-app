@@ -49,7 +49,7 @@ export const TaskList = ({
   return (
     <div className="h-full">
       <Card
-        className="min-w-96 max-h-full bg-gradient-card backdrop-blur-sm border-border/50 transition-all duration-200 flex flex-col rounded-md"
+        className="min-w-96 max-h-full bg-gradient-card backdrop-blur-sm border-border/50 transition-all duration-200 flex flex-col rounded-md draggable-item"
         ref={listRef}
       >
         <CardHeader

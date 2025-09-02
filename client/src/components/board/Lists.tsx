@@ -58,7 +58,7 @@ const Lists = () => {
           horizontal
           vertical={false}
           hideScrollbars={false}
-          ignoreElements="div"
+          ignoreElements=".draggable-item"
         >
           {lists.map((list) => {
             const listCards = cards.filter((card) => card.listId === list._id);
