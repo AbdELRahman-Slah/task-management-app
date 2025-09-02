@@ -1,6 +1,7 @@
 import {
   DndContext,
   DragOverlay,
+  MouseSensor,
   PointerSensor,
   TouchSensor,
   closestCorners,
@@ -34,12 +35,17 @@ const Lists = () => {
   const { isSuccess: isCardsSuccess, cards } = useGetCards();
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
         distance: 3,
       },
     }),
-    useSensor(TouchSensor)
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 300,
+        tolerance: 2,
+      },
+    })
   );
 
   const listIds = lists?.map(({ _id }) => _id);

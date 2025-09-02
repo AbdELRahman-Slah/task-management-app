@@ -44,7 +44,7 @@ export const TaskCard = ({ card }: { card: CardType }) => {
     />
   ) : (
     <Card
-      className="active:cursor-grabbing bg-card hover:shadow-soft border-border/50 h-20 rounded-sm "
+      className="active:cursor-grabbing bg-card hover:shadow-soft border-border/50 h-20 rounded-sm md:touch-none"
       onClick={() => setTitleEdit(!titleEdit)}
     >
       <CardContent className="p-4 h-full">

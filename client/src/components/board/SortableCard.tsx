@@ -1,7 +1,6 @@
 import { Card } from "@/types/card.types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ReactNode } from "react";
 import { TaskCard } from "./TaskCard";
 
 const SortableCard = ({ listId, card }: { card: Card; listId: string }) => {
@@ -24,7 +23,7 @@ const SortableCard = ({ listId, card }: { card: Card; listId: string }) => {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {!isDragging && <TaskCard card={card} />}
       {isDragging && (
-        <div className=" border-border/50 h-20 bg-card rounded-sm touch-none" />
+        <div className=" border-border/50 h-20 bg-card rounded-sm" />
       )}
     </div>
   );

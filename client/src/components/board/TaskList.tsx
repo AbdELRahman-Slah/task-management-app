@@ -53,7 +53,7 @@ export const TaskList = ({
         ref={listRef}
       >
         <CardHeader
-          className="flex justify-between flex-row gap-3 items-center"
+          className="flex justify-between flex-row gap-3 items-center md:touch-none"
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
