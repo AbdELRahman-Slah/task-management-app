@@ -13,6 +13,7 @@ import {
 import { Ref } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -24,6 +25,8 @@ export const Navbar = ({
   navbarRef?: Ref<HTMLElement>;
 }) => {
   const navigate = useNavigate();
+
+  const isMobile = useIsMobile();
 
   const { mutate } = useMutation({
     mutationFn: () => {
@@ -45,14 +48,16 @@ export const Navbar = ({
           to={isLoggedIn ? "/dashboard" : "/"}
           className="flex items-center gap-2"
         >
-          <div className="bg-gradient-primary p-2 rounded-lg shadow-primary">
+          <div className="bg-gradient-primary p-2 rounded-lg shadow-primary/30 shadow-sm">
             <CircleCheckBig className="h-6 w-6 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">TaskFlow</span>
+          {!isMobile && (
+            <span className="text-xl font-bold text-foreground">TaskFlow</span>
+          )}
         </Link>
 
         <div className="flex items-center gap-4">
-          <ThemeToggle />
+          {!isMobile && <ThemeToggle />}
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -88,7 +93,7 @@ export const Navbar = ({
                 <Button variant="ghost">Login</Button>
               </Link>
               <Link to="/signup">
-                <Button className="bg-gradient-primary shadow-primary">
+                <Button variant="default" className="bg-gradient-primary">
                   Sign Up
                 </Button>
               </Link>

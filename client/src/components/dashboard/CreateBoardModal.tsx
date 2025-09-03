@@ -71,8 +71,14 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <Card className="w-full max-w-md shadow-lg border-border">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <Card
+        className="w-full max-w-md shadow-lg border-border bg-background/95 rounded-3xl overflow-hidden mx-4 backdrop-blur-sm"
+        onClick={(e) => e.stopPropagation()}
+      >
         <CardContent className="p-6">
           <h2 className="text-xl font-bold mb-4 text-foreground">
             Create New Board
@@ -83,7 +89,7 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
                 Board Title
               </label>
               <input
-                className="w-full px-3 py-2 border rounded bg-background text-foreground focus:outline-none focus:ring focus:border-primary"
+                className="w-full px-3 py-2 border rounded-lg bg-background text-foreground focus:outline-none focus:ring focus:border-primary"
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -100,7 +106,7 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
                   <button
                     type="button"
                     key={bg}
-                    className={`h-8 w-8 rounded ${bg} border-2 ${
+                    className={`h-8 w-12 rounded ${bg} border-2 ${
                       background === bg
                         ? "border-primary"
                         : "border-transparent"

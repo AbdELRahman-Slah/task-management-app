@@ -40,7 +40,7 @@ const SortableList = (props: SortableProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className={`pointer-events-auto h-full`}
+      className={`pointer-events-auto h-full task-card`}
     >
       {!isDragging && (
         <TaskList

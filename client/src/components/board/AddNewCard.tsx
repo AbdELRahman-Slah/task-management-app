@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import useCreateCard from "@/hooks/cards/useCreateCard";
 import { Card } from "@/types/card.types";
 import { v4 as uuidv4, v4 } from "uuid";
+import { set } from "date-fns";
 
 const AddNewCard = ({ listId, cards }: { listId: string; cards: Card[] }) => {
   const { boardId } = useParams();
@@ -47,12 +48,17 @@ const AddNewCard = ({ listId, cards }: { listId: string; cards: Card[] }) => {
             handleSaveChange();
           }
         }}
+        onBlur={() => {
+          setIsAddingCard(false);
+          setCardTitle("");
+        }}
         className="mb-4 min-h-min resize-none"
       />
       <div className="flex flex-row gap-3 justify-start">
         <Button
-          onClick={() => {
+          onClick={(e) => {
             handleSaveChange();
+            e.stopPropagation();
           }}
         >
           Add List

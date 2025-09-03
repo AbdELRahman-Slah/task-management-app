@@ -2,7 +2,6 @@ import {
   DndContext,
   DragOverlay,
   MouseSensor,
-  PointerSensor,
   TouchSensor,
   closestCorners,
   useSensor,
@@ -60,7 +59,7 @@ const Lists = () => {
     >
       <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
         <ScrollContainer
-          className="flex gap-6 px-6 overflow-x-auto select-none flex-grow pb-16 h-full"
+          className="flex gap-6 px-6 overflow-x-auto select-none flex-grow pb-16 h-full scroll-container"
           horizontal
           vertical={false}
           hideScrollbars={false}

@@ -12,7 +12,6 @@ import useApiRequest from "@/hooks/useApiRequest";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const apiRequest = useApiRequest();
 
   const { isPending, isError, data, error } = useQuery({
@@ -31,38 +30,7 @@ const Dashboard = () => {
       <Navbar isLoggedIn={true} />
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">
-                Your Boards
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Manage your projects and collaborate with your team
-              </p>
-            </div>
-
-            <Button
-              className="bg-gradient-primary shadow-primary"
-              onClick={() => setIsModalOpen(true)}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Create Board
-            </Button>
-          </div>
-        </div>
-
         {isPending ? <BoardListSkeleton /> : <BoardList boards={data.boards} />}
-
-        <CreateBoardModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onBoardCreated={() => {
-            setIsModalOpen(false);
-
-            queryClient.invalidateQueries({ queryKey: ["boards"] });
-          }}
-        />
       </div>
     </div>
   );

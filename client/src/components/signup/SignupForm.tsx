@@ -77,31 +77,33 @@ const SignupForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-6"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <CustomFormField
+              name="firstName"
+              placeholder="First Name"
+              control={form.control}
+            />
+            <CustomFormField
+              name="lastName"
+              placeholder="Last Name"
+              control={form.control}
+            />
+          </div>
+
           <CustomFormField
-            name="firstName"
-            placeholder="First Name"
+            name="email"
+            placeholder="Email"
             control={form.control}
           />
           <CustomFormField
-            name="lastName"
-            placeholder="Last Name"
+            name="password"
+            placeholder="Password"
             control={form.control}
           />
         </div>
-
-        <CustomFormField
-          name="email"
-          placeholder="Email"
-          control={form.control}
-        />
-        <CustomFormField
-          name="password"
-          placeholder="Password"
-          control={form.control}
-        />
 
         <Button
           type="submit"

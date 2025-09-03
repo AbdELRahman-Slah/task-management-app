@@ -1,6 +1,5 @@
 import { ListsApiResponse } from "@/types/list.types";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BoardContext } from "../../contexts/BoardContext";
@@ -17,7 +16,7 @@ const useGetLists = () => {
     queryKey: ["lists", boardId],
     queryFn: () =>
       apiRequest<ListsApiResponse>(`${API_URL}/boards/${boardId}/lists`, {
-        method: "get",
+        method: "GET",
       }),
     select: (data) => data.data.data,
   });

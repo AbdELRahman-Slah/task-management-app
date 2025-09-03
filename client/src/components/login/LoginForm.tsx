@@ -1,17 +1,11 @@
 import { Button } from "../ui/button";
 import z from "zod";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { User } from "@/types/user.types";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomFormField } from "../CustomField";
 import { Form } from "../ui/form";
 import useLogin from "@/hooks/useLogin";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -40,17 +34,19 @@ const LoginForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <CustomFormField
-          name="email"
-          placeholder="Email"
-          control={form.control}
-        />
-        <CustomFormField
-          name="password"
-          placeholder="Password"
-          control={form.control}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-4">
+          <CustomFormField
+            name="email"
+            placeholder="Email"
+            control={form.control}
+          />
+          <CustomFormField
+            name="password"
+            placeholder="Password"
+            control={form.control}
+          />
+        </div>
 
         <Button
           type="submit"

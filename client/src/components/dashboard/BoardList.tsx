@@ -1,8 +1,14 @@
 import { Users, Calendar, Plus } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { Link } from "react-router-dom";
+import CreateBoardModal from "./CreateBoardModal";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const BoardList = ({ boards }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const queryClient = useQueryClient();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {!!boards.length &&
@@ -37,7 +43,10 @@ const BoardList = ({ boards }) => {
         ))}
 
       {/* Create New Board Card */}
-      <Card className="group hover:shadow-card transition-all duration-300 bg-gradient-card backdrop-blur-sm border-border/50 border-dashed">
+      <Card
+        className="group hover:shadow-card transition-all duration-300 bg-gradient-card backdrop-blur-sm border-border/50 border-dashed"
+        onClick={() => setIsModalOpen(true)}
+      >
         <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center">
           <div className="bg-primary/10 p-4 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
             <Plus className="h-6 w-6 text-primary" />
@@ -50,6 +59,16 @@ const BoardList = ({ boards }) => {
           </p>
         </CardContent>
       </Card>
+
+      <CreateBoardModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onBoardCreated={() => {
+          setIsModalOpen(false);
+
+          queryClient.invalidateQueries({ queryKey: ["boards"] });
+        }}
+      />
     </div>
   );
 };

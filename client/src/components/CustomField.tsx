@@ -27,6 +27,7 @@ export const CustomFormField = ({
           <Input
             {...field}
             placeholder={placeholder}
+            autoComplete="off"
             className={cn(
               "border",
               fieldState.invalid
