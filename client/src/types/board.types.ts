@@ -11,3 +11,11 @@ export interface Board {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface BoardsApiResponse {
+  status: string;
+  data: {
+    boards: Board[];
+  };
+  message?: string;
+}

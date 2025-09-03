@@ -4,22 +4,20 @@ import axios from "axios";
 import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BoardContext } from "../../contexts/BoardContext";
+import useApiRequest from "../useApiRequest";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useGetLists = () => {
   const { boardId } = useParams();
   const { lists, setLists } = useContext(BoardContext);
-
-  const userToken = localStorage.getItem("token");
+  const apiRequest = useApiRequest();
 
   const listsQuery = useQuery({
     queryKey: ["lists", boardId],
     queryFn: () =>
-      axios.get<ListsApiResponse>(`${API_URL}/boards/${boardId}/lists`, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
+      apiRequest<ListsApiResponse>(`${API_URL}/boards/${boardId}/lists`, {
+        method: "get",
       }),
     select: (data) => data.data.data,
   });

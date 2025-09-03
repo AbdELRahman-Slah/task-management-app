@@ -14,7 +14,7 @@ const {
 } = require("../validation/list.validation");
 const validate = require("../middlewares/validate.middleware");
 const cardRouter = require("./card.route");
-const verifyUserToken = require("../middlewares/verifyUserToken");
+const verifyAccessToken = require("../middlewares/verifyAccessToken");
 const validateBoard = require("../middlewares/validateBoard.middleware");
 
 const listRouter = express.Router({ mergeParams: true });
@@ -24,7 +24,7 @@ listRouter
     "/",
     getAndDeleteListValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     getAllLists
   )
@@ -32,7 +32,7 @@ listRouter
     "/",
     createListValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     createList
   )
@@ -40,7 +40,7 @@ listRouter
     "/:id",
     updateListValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     updateOneList
   )
@@ -48,7 +48,7 @@ listRouter
     "/",
     updateManyListsValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     updateManyLists
   )
@@ -56,7 +56,7 @@ listRouter
     "/:id",
     getAndDeleteListValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     deleteList
   );

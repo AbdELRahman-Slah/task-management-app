@@ -2,7 +2,12 @@ const bcrypt = require("bcrypt");
 const catchWrapper = require("../middlewares/catchWrapper.middleware");
 const User = require("../models/user.model");
 const AppError = require("../utils/AppError");
-const generateUserToken = require("../utils/generateUserToken");
+const {
+  generateUserAccessToken,
+  generateUserRefreshToken,
+} = require("../utils/generateUserToken");
+const ms = require("ms");
+const jwt = require("jsonwebtoken");
 
 const registerUser = catchWrapper(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
@@ -22,7 +27,25 @@ const registerUser = catchWrapper(async (req, res, next) => {
     password: hashedPassword,
   });
 
-  const token = generateUserToken(newUser._id);
+  const accessToken = generateUserAccessToken(newUser._id);
+  const refreshToken = generateUserRefreshToken(newUser._id);
+
+  const accessTokenExpiresIn = ms(process.env.ACCESS_TOKEN_EXPIRES_IN);
+  const refreshTokenExpiresIn = ms(process.env.REFRESH_TOKEN_EXPIRES_IN);
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: accessTokenExpiresIn,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: refreshTokenExpiresIn,
+  });
 
   res.status(200).json({
     status: "success",
@@ -33,7 +56,6 @@ const registerUser = catchWrapper(async (req, res, next) => {
         lastName: newUser.lastName,
         email: newUser.email,
       },
-      token,
     },
   });
 });
@@ -44,7 +66,7 @@ const loginUser = catchWrapper(async (req, res, next) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return next(new AppError("User doesn't not exist", 404));
+    return next(new AppError("User does not exist", 404));
   }
 
   const passwordIsMatched = await bcrypt.compare(password, user.password);
@@ -53,7 +75,27 @@ const loginUser = catchWrapper(async (req, res, next) => {
     return next(new AppError("Password is incorrect", 401));
   }
 
-  const token = generateUserToken(user._id);
+  const accessToken = generateUserAccessToken(user._id);
+  const refreshToken = generateUserRefreshToken(user._id);
+
+  const accessTokenExpiresIn = ms(process.env.ACCESS_TOKEN_EXPIRES_IN);
+  const refreshTokenExpiresIn = ms(process.env.REFRESH_TOKEN_EXPIRES_IN);
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+    maxAge: accessTokenExpiresIn,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/api/users/refresh",
+    maxAge: refreshTokenExpiresIn,
+  });
 
   res.status(200).json({
     status: "success",
@@ -64,12 +106,49 @@ const loginUser = catchWrapper(async (req, res, next) => {
         lastName: user.lastName,
         email: user.email,
       },
-      token,
     },
+  });
+});
+
+const refreshUserSession = catchWrapper(async (req, res, next) => {
+  const { userId } = req.user;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return next(new AppError("User does not exist", 404));
+  }
+
+  const accessToken = generateUserAccessToken(user._id);
+  const accessTokenExpiresIn = ms(process.env.ACCESS_TOKEN_EXPIRES_IN);
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: accessTokenExpiresIn,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: null,
+    message: "Access token is successfully updated",
+  });
+});
+
+const logoutUser = catchWrapper(async (req, res, next) => {
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken", { path: "/api/users/refresh" });
+
+  res.status(200).json({
+    status: "success",
+    data: null,
   });
 });
 
 module.exports = {
   registerUser,
   loginUser,
+  refreshUserSession,
+  logoutUser,
 };

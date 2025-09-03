@@ -13,8 +13,9 @@ const createBoardValidation = () => [
     .withMessage("Title must be a string"),
 
   body("users")
-    .isArray({ min: 1 })
-    .withMessage("users must be an array of at least on element"),
+    .optional()
+    .isArray({ min: 0 })
+    .withMessage("users must be an array"),
 
   body("users.*.id")
     .isMongoId()

@@ -4,7 +4,7 @@ const Board = require("../models/board.model");
 const AppError = require("../utils/AppError");
 
 const getAllBoards = catchWrapper(async (req, res) => {
-  const { userId } = req.user; // req.user was set in verifyUserToken.js file
+  const { userId } = req.user; // req.user was set in verifyAccessToken.js file
 
   const boards = await Board.find({ "users.id": userId }, { __v: 0 });
 
@@ -16,7 +16,7 @@ const getAllBoards = catchWrapper(async (req, res) => {
 
 const getBoardById = catchWrapper(async (req, res, next) => {
   const boardId = req.params.id;
-  const { userId } = req.user; // req.user was set in verifyUserToken.js file
+  const { userId } = req.user; // req.user was set in verifyAccessToken.js file
 
   const board = await Board.aggregate([
     {
@@ -56,11 +56,10 @@ const getBoardById = catchWrapper(async (req, res, next) => {
 
 const createBoard = catchWrapper(async (req, res, next) => {
   const { title, users, icon, background } = req.body;
-  const { userId } = req.user; // req.user was set in verifyUserToken.js file
+  const { userId } = req.user; // req.user was set in verifyAccessToken.js file
 
-  const filteredUsers = users.filter(
-    ({ id }) => id.toString() !== userId.toString()
-  );
+  const filteredUsers =
+    users?.filter(({ id }) => id.toString() !== userId.toString()) || [];
 
   const newBoard = await Board.create({
     title,
@@ -86,7 +85,7 @@ const createBoard = catchWrapper(async (req, res, next) => {
 const updateBoard = catchWrapper(async (req, res, next) => {
   const boardId = req.params.id;
   const { title, users, icon } = req.body;
-  const { userId } = req.user; // req.user was set in verifyUserToken.js file
+  const { userId } = req.user; // req.user was set in verifyAccessToken.js file
 
   const board = await Board.findOne({ _id: boardId, "users.id": userId });
 
@@ -130,7 +129,7 @@ const updateBoard = catchWrapper(async (req, res, next) => {
 
 const deleteBoard = catchWrapper(async (req, res, next) => {
   const boardId = req.params.id;
-  const { userId } = req.user; // req.user was set in verifyUserToken.js file
+  const { userId } = req.user; // req.user was set in verifyAccessToken.js file
 
   const board = await Board.findById(boardId);
 

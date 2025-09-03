@@ -17,7 +17,7 @@ const {
 const validate = require("../middlewares/validate.middleware");
 const validateListInBoard = require("../middlewares/validateListInBoard.middleware");
 const validateBoard = require("../middlewares/validateBoard.middleware");
-const verifyUserToken = require("../middlewares/verifyUserToken");
+const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 const cardRouter = express.Router({ mergeParams: true });
 
@@ -26,7 +26,7 @@ cardRouter
     "/",
     getCardsValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     getAllCardsForBoard
   )
@@ -34,7 +34,7 @@ cardRouter
     "/",
     createAndUpdateCardValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     // validateListInBoard,
     createCard
@@ -43,7 +43,7 @@ cardRouter
     "/:id",
     createAndUpdateCardValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     // validateListInBoard,
     updateCard
@@ -52,7 +52,7 @@ cardRouter
     "/",
     updateMultipleCardsValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     // validateListInBoard,
     updateMultipleCards
@@ -61,7 +61,7 @@ cardRouter
     "/:id",
     deleteCardValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
     // validateListInBoard,
     deleteCard
@@ -70,9 +70,9 @@ cardRouter
     "/",
     deleteMultipleCardsValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     validateBoard,
-    // validateListInBoard, 
+    // validateListInBoard,
     deleteMultipleCards
   );
 

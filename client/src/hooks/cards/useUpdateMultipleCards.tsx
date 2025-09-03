@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import {  CardToUpdate } from "@/types/card.types";
+import { CardToUpdate } from "@/types/card.types";
 import { BoardContext } from "@/contexts/BoardContext";
 import { useContext } from "react";
+import useApiRequest from "../useApiRequest";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,15 +12,14 @@ const useUpdateMultipleCards = () => {
   const { boardId } = useParams();
   const { setCards } = useContext(BoardContext);
 
-  const userToken = localStorage.getItem("token");
+  const apiRequest = useApiRequest();
 
   const mutation = useMutation({
     mutationKey: ["updateMultipleCards"],
     mutationFn: (cards: CardToUpdate[]) => {
-      return axios.patch(`${API_URL}/boards/${boardId}/cards`, { cards }, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
+      return apiRequest(`${API_URL}/boards/${boardId}/cards`, {
+        method: "PATCH",
+        data: { cards },
       });
     },
   });

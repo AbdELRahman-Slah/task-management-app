@@ -4,13 +4,14 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { BoardContext } from "../../contexts/BoardContext";
 import { useContext, useEffect } from "react";
+import useApiRequest from "../useApiRequest";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useGetCards = () => {
   const { boardId } = useParams();
 
-  const userToken = localStorage.getItem("token");
+  const apiRequest = useApiRequest();
 
   const { cards, setCards } = useContext(BoardContext);
 
@@ -18,10 +19,8 @@ const useGetCards = () => {
     queryKey: ["cards", boardId],
 
     queryFn: () =>
-      axios.get<CardsApiResponse>(`${API_URL}/boards/${boardId}/cards/`, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
+      apiRequest<CardsApiResponse>(`${API_URL}/boards/${boardId}/cards/`, {
+        method: "GET",
       }),
     select: (data) => data.data.data,
   });

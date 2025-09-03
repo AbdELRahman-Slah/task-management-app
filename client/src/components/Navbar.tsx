@@ -11,6 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ref } from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const Navbar = ({
   isLoggedIn,
@@ -20,6 +24,16 @@ export const Navbar = ({
   navbarRef?: Ref<HTMLElement>;
 }) => {
   const navigate = useNavigate();
+
+  const { mutate } = useMutation({
+    mutationFn: () => {
+      return axios.post(`${API_URL}/users/logout`);
+    },
+    onSuccess: () => {
+      localStorage.clear();
+      navigate("/");
+    },
+  });
 
   return (
     <nav
@@ -61,9 +75,7 @@ export const Navbar = ({
                 <DropdownMenuItem
                   className="text-red-500 data-[highlighted]:bg-red-500 data-[highlighted]:text-white"
                   onClick={() => {
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("user");
-                    navigate("/");
+                    mutate();
                   }}
                 >
                   Logout

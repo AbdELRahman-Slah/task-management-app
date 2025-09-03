@@ -4,14 +4,16 @@ const mongoose = require("mongoose");
 const userRouter = require("./routes/user.route");
 const boardRouter = require("./routes/board.route");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
 const app = express();
 const httpSever = createServer(app);
 
-app.use(cors());
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
+app.use(cookieParser());
 app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/boards", boardRouter);

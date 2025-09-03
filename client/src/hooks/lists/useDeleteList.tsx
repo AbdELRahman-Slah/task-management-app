@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { BoardContext } from "../../contexts/BoardContext";
 import useDeleteMultipleCards from "../cards/useDeleteMultipleCards";
+import useApiRequest from "../useApiRequest";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -12,14 +13,12 @@ const useDeleteList = () => {
   const { setLists, cards } = useContext(BoardContext);
   const { deleteMultipleCards } = useDeleteMultipleCards();
 
-  const userToken = localStorage.getItem("token");
+  const apiRequest = useApiRequest();
 
   const deleteListMutation = useMutation({
     mutationFn: (listId: string) =>
-      axios.delete(`${API_URL}/boards/${boardId}/lists/${listId}`, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
+      apiRequest(`${API_URL}/boards/${boardId}/lists/${listId}`, {
+        method: "DELETE",
       }),
   });
 

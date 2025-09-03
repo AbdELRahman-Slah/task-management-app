@@ -13,7 +13,6 @@ const validateBoard = catchWrapper(async (req, res, next) => {
   }
 
   const isUserExist = board.users.some(({ id }) => String(id) === userId);
-  console.log(isUserExist);
 
   if (!isUserExist) {
     return next(new AppError("User doesn't exist in the board", 403));

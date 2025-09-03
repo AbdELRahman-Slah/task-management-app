@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomFormField } from "../CustomField";
 import { Form } from "../ui/form";
+import useLogin from "@/hooks/useLogin";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -20,35 +21,10 @@ const loginFormSchema = z.object({
     .max(30, "Password must be at most 30 characters long"),
 });
 
-type LoginFormSchema = z.infer<typeof loginFormSchema>;
+export type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
 const LoginForm = () => {
-  const navigate = useNavigate();
-
-  const mutation = useMutation({
-    mutationFn: (formData: LoginFormSchema) => {
-      return axios.post(`${API_URL}/users/login`, formData);
-    },
-    onSuccess: (data: { data: { data: { token: string; user: User } } }) => {
-      localStorage.setItem("token", data.data.data.token);
-      localStorage.setItem("user", JSON.stringify(data.data.data.user));
-
-      navigate("/dashboard");
-
-      toast({
-        title: "Welcome back!",
-        description: "Successfully signed in to TaskFlow",
-      });
-    },
-
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Invalid email or password",
-        variant: "destructive",
-      });
-    },
-  });
+  const { mutate } = useLogin();
 
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -59,7 +35,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (values: LoginFormSchema) => {
-    mutation.mutate(values);
+    mutate(values);
   };
 
   return (

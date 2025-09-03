@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
+import useApiRequest from "../useApiRequest";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,19 +12,14 @@ const useUpdateMultipleLists = () => {
   const { boardId } = useParams();
   const { setLists } = useContext(BoardContext);
 
-  const userToken = localStorage.getItem("token");
+  const apiRequest = useApiRequest();
 
   const updateMultipleListsMutation = useMutation({
-    mutationFn: (listToUpdate: ListToUpdate[]) =>
-      axios.patch(
-        `${API_URL}/boards/${boardId}/lists`,
-        { lists: listToUpdate },
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      ),
+    mutationFn: (listsToUpdate: ListToUpdate[]) =>
+      apiRequest(`${API_URL}/boards/${boardId}/lists`, {
+        method: "PATCH",
+        data: { lists: listsToUpdate },
+      }),
   });
 
   const updateMultipleLists = (updatedLists: List[]) => {

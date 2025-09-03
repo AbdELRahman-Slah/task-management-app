@@ -12,7 +12,7 @@ const {
   updateBoardValidation,
 } = require("../validation/board.validation");
 const validate = require("../middlewares/validate.middleware");
-const verifyUserToken = require("../middlewares/verifyUserToken");
+const verifyAccessToken = require("../middlewares/verifyAccessToken");
 const listRouter = require("./list.route");
 const cardRouter = require("./card.route");
 
@@ -22,27 +22,27 @@ boardRouter.use("/:boardId/lists", listRouter);
 boardRouter.use("/:boardId/cards", cardRouter);
 
 boardRouter
-  .get("/", verifyUserToken, getAllBoards)
+  .get("/", verifyAccessToken, getAllBoards)
   .get(
     "/:id",
     getAndDeleteBoardByIdValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     getBoardById
   )
-  .post("/", createBoardValidation(), validate, verifyUserToken, createBoard)
+  .post("/", createBoardValidation(), validate, verifyAccessToken, createBoard)
   .patch(
     "/:id",
     updateBoardValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     updateBoard
   )
   .delete(
     "/:id",
     getAndDeleteBoardByIdValidation(),
     validate,
-    verifyUserToken,
+    verifyAccessToken,
     deleteBoard
   );
 

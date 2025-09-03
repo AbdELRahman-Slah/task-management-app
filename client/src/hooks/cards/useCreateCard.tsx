@@ -5,6 +5,8 @@ import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { BoardContext } from "../../contexts/BoardContext";
 import { toast } from "@/hooks/use-toast";
+import useApiRequest from "../useApiRequest";
+import { stringify } from "querystring";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -12,20 +14,18 @@ const useCreateCard = () => {
   const { boardId } = useParams();
   const { setCards } = useContext(BoardContext);
 
-  const userToken = localStorage.getItem("token");
+  const apiRequest = useApiRequest();
 
   const mutation = useMutation({
     mutationFn: (cardData: Card) => {
       const cardWithoutId = { ...cardData };
       delete cardWithoutId._id;
 
-      return axios.post<SingleCardApiResponse>(
+      return apiRequest<SingleCardApiResponse>(
         `${API_URL}/boards/${boardId}/cards`,
-        cardWithoutId,
         {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
+          method: "POST",
+          data: cardWithoutId,
         }
       );
     },

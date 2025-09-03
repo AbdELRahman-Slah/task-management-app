@@ -4,34 +4,24 @@ import { Plus } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import BoardListSkeleton from "@/components/dashboard/BoardListSkeleton";
 import BoardList from "@/components/dashboard/BoardList";
-import { Board } from "@/types/board.types";
+import { BoardsApiResponse } from "@/types/board.types";
 import CreateBoardModal from "@/components/dashboard/CreateBoardModal";
 import { useState } from "react";
-
-interface Data {
-  status: string;
-  data: {
-    boards: Board[];
-  };
-  message?: string;
-}
+import useApiRequest from "@/hooks/useApiRequest";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const userToken = localStorage.getItem("token");
+  const apiRequest = useApiRequest();
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["boards"],
-    queryFn: (): Promise<Data> =>
-      fetch(`${API_URL}/boards`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }).then((res) => res.json()),
+    queryFn: () =>
+      apiRequest<BoardsApiResponse>(`${API_URL}/boards`, {
+        method: "get",
+      }),
+    select: (data) => data.data.data,
   });
 
   const queryClient = useQueryClient();
@@ -62,11 +52,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {isPending ? (
-          <BoardListSkeleton />
-        ) : (
-          <BoardList boards={data.data.boards} />
-        )}
+        {isPending ? <BoardListSkeleton /> : <BoardList boards={data.boards} />}
 
         <CreateBoardModal
           isOpen={isModalOpen}

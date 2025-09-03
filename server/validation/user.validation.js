@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, cookie } = require("express-validator");
 
 const userRegisterValidation = () => {
   return [

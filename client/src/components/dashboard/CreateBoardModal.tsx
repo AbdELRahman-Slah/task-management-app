@@ -3,6 +3,7 @@ import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import useApiRequest from "@/hooks/useApiRequest";
 
 interface CreateBoardModalProps {
   isOpen: boolean;
@@ -35,22 +36,20 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
   onClose,
   onBoardCreated,
 }) => {
-  const userId = JSON.parse(localStorage.getItem("user") as string).id;
-
-  const initUsers = [{ id: userId, role: "ADMIN" }];
-  const userToken = localStorage.getItem("token");
+  // const initUsers = [{ id: userId, role: "ADMIN" }];
 
   const [title, setTitle] = useState("");
-  const [users, setUsers] = useState<User[]>(initUsers);
+  const [users, setUsers] = useState<User[]>();
   const [background, setBackground] = useState(backgrounds[0]);
   const [loading, setLoading] = useState(false);
 
+  const apiRequest = useApiRequest();
+
   const mutation = useMutation({
     mutationFn: (data: Data) =>
-      axios.post(`${API_URL}/boards`, data, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
+      apiRequest(`${API_URL}/boards`, {
+        method: "POST",
+        data,
       }),
     onSuccess: () => {
       if (onBoardCreated) onBoardCreated();
@@ -68,7 +67,7 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
     setLoading(false);
     setTitle("");
     setBackground(backgrounds[0]);
-    setUsers([{ id: "686d02b9d7a9810de37d7bee", role: "ADMIN" }]);
+    setUsers([]);
   };
 
   return (

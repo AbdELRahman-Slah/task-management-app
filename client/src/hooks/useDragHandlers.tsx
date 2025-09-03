@@ -37,7 +37,8 @@ const useDragHandlers = () => {
 
     if (
       active.data.current.type === "list" &&
-      over.data.current.type === "list"
+      over.data.current.type === "list" &&
+      active.id !== over.id
     ) {
       setLists((lists) => {
         const oldIndex = lists.findIndex(
