@@ -63,6 +63,12 @@ const Lists = () => {
           horizontal
           vertical={false}
           hideScrollbars={false}
+          onClick={() => {
+            const active = document.activeElement;
+            if (active instanceof HTMLElement) {
+              active.blur();
+            }
+          }}
           ignoreElements=".draggable-item"
         >
           {lists.map((list) => {

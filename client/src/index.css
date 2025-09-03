@@ -198,11 +198,10 @@ All colors MUST be HSL.
     scroll-snap-align: center;
   }
 }
-
-/* Mobile only */
+/* 
 @media (min-width: 768px) {
   .task-card {
-    flex: 0 0 auto; /* Normal scrolling on desktop */
+    flex: 0 0 auto;
     min-width: 250px;
   }
-}
+} */

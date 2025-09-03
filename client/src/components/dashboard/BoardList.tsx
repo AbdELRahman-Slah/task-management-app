@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import CreateBoardModal from "./CreateBoardModal";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { Board } from "@/types/board.types";
 
-const BoardList = ({ boards }) => {
+const BoardList = ({ boards }: { boards: Board[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -13,7 +14,13 @@ const BoardList = ({ boards }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {!!boards.length &&
         boards.map((board) => (
-          <Link key={board._id} to={`/board/${board._id}`}>
+          <Link
+            key={board._id}
+            to={`/board/${board._id}`}
+            onClick={() => {
+              queryClient.removeQueries({ queryKey: ["lists", board._id] });
+            }}
+          >
             <Card className="group hover:shadow-card transition-all duration-300 overflow-hidden bg-gradient-card backdrop-blur-sm border-border/50">
               <div className={`h-32 ${board.background} relative`}>
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300"></div>

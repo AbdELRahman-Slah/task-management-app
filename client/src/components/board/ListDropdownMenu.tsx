@@ -9,7 +9,6 @@ import {
 } from "../ui/dropdown-menu";
 import { MoreHorizontal, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { useParams } from "react-router-dom";
 import useDeleteList from "@/hooks/lists/useDeleteList";
 
 const ListDropdownMenu = ({ listId }: { listId: string }) => {

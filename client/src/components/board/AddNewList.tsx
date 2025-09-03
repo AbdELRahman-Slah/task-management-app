@@ -28,7 +28,7 @@ export default function AddNewList({ listsLength }: { listsLength: number }) {
   // TODO: add loading indicator to return real id
 
   return (
-    <Card className="min-w-[300px] bg-gradient-card backdrop-blur-sm border-border/50 border-dashed h-fit">
+    <Card className="min-w-[300px] bg-gradient-card backdrop-blur-sm border-border/50 border-dashed h-fit task-card">
       <CardContent className="p-4 h-fit">
         {isAddingList ? (
           <>
@@ -42,11 +42,15 @@ export default function AddNewList({ listsLength }: { listsLength: number }) {
                   handleSaveChange();
                 }
               }}
+              onBlur={() => {
+                setIsAddingList(false);
+                setListTitle("");
+              }}
               className="mb-4 min-h-min resize-none"
             />
             <div className="flex flex-row gap-3 justify-start">
               <Button
-                onClick={() => {
+                onMouseDown={() => {
                   handleSaveChange();
                 }}
               >
@@ -55,7 +59,7 @@ export default function AddNewList({ listsLength }: { listsLength: number }) {
               <Button
                 type="button"
                 variant="ghost"
-                onClick={() => {
+                onMouseDown={() => {
                   setIsAddingList(false);
                   setListTitle("");
                 }}
