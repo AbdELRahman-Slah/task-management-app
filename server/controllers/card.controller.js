@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const getAllCardsForBoard = catchWrapper(async (req, res, next) => {
   const { boardId } = req.params;
-  const cards = await Card.find({ boardId }).sort({ position: 1 });
+  const cards = await Card.find({ boardId }).sort({ position: 1, listId: 1 });
 
   res.status(200).json({
     status: "success",
