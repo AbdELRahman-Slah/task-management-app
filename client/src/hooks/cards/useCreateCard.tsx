@@ -1,18 +1,18 @@
 import { Card, SingleCardApiResponse } from "@/types/card.types";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { BoardContext } from "../../contexts/BoardContext";
 import { toast } from "@/hooks/use-toast";
 import useApiRequest from "../useApiRequest";
-import { stringify } from "querystring";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useCreateCard = () => {
   const { boardId } = useParams();
   const { setCards } = useContext(BoardContext);
+
+  const queryClient = useQueryClient();
 
   const apiRequest = useApiRequest();
 
@@ -29,10 +29,13 @@ const useCreateCard = () => {
         }
       );
     },
+
     onSuccess: (data, card) => {
+      queryClient.invalidateQueries({ queryKey: ["cards", boardId] });
+
       toast({
         title: "Card was added successfully",
-        variant: "destructive",
+        variant: "default",
       });
 
       setCards((cards) => {
@@ -43,6 +46,24 @@ const useCreateCard = () => {
         );
 
         return [...cardsWithoutNewCard, data.data.data.card];
+      });
+    },
+
+    onError: (error, cardData) => {
+      toast({
+        title: "Error",
+        description: "Error moving card",
+        variant: "destructive",
+      });
+
+      setCards((cards) => {
+        const TempCreatedCardId = cardData._id;
+
+        const cardsWithoutNewCard = cards.filter(
+          (card) => card._id !== TempCreatedCardId
+        );
+
+        return [...cardsWithoutNewCard];
       });
     },
   });

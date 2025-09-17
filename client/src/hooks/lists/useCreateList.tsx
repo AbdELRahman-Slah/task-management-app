@@ -1,5 +1,8 @@
 import { List, SingleListApiResponse } from "@/types/list.types";
-import { useMutation } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { BoardContext } from "@/contexts/BoardContext";
@@ -10,7 +13,9 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const useCreateList = () => {
   const { boardId } = useParams();
-  const { setLists } = useContext(BoardContext);
+  const { lists, setLists } = useContext(BoardContext);
+
+  const queryClient = useQueryClient();
 
   const apiRequest = useApiRequest();
 
@@ -27,11 +32,21 @@ const useCreateList = () => {
         }
       );
     },
+    onMutate: (listData) => {
+      const prevList = lists.find((list) => list._id === listData._id);
+      setLists((lists) =>
+        lists.map((list) => (list._id === listData._id ? listData : list))
+      );
+
+      return prevList;
+    },
 
     onSuccess: (data, list) => {
+      queryClient.invalidateQueries({ queryKey: ["lists", boardId] });
+
       toast({
         title: "List was added successfully",
-        variant: "destructive",
+        variant: "default",
       });
 
       setLists((lists) => {
@@ -42,6 +57,24 @@ const useCreateList = () => {
         );
 
         return [...listsWithoutNewList, data.data.data.list];
+      });
+    },
+
+    onError: (error, listData, prevList) => {
+      toast({
+        title: "Error",
+        description: "Error creating list",
+        variant: "destructive",
+      });
+
+      setLists((lists) => {
+        const TempCreatedListId = listData._id;
+
+        const listsWithoutNewList = lists.filter(
+          (list) => list._id !== TempCreatedListId
+        );
+
+        return [...listsWithoutNewList];
       });
     },
   });

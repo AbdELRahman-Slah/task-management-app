@@ -1,7 +1,12 @@
 import { BoardContext } from "@/contexts/BoardContext";
 import { Card } from "@/types/card.types";
 import { List } from "@/types/list.types";
-import { DragStartEvent, DragEndEvent, DragOverEvent } from "@dnd-kit/core";
+import {
+  DragStartEvent,
+  DragEndEvent,
+  DragOverEvent,
+  DragMoveEvent,
+} from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useContext, useState } from "react";
 import useUpdateMultipleLists from "./lists/useUpdateMultipleLists";
@@ -12,8 +17,13 @@ const useDragHandlers = () => {
   const [activeList, setActiveList] = useState<List>();
   const [activeCard, setActiveCard] = useState<Card>();
 
-  const { mutate: mutateMultipleLists } = useUpdateMultipleLists();
-  const { mutate: mutateMultipleCards } = useUpdateMultipleCards();
+  const { mutate: mutateMultipleLists, prevListsRef } =
+    useUpdateMultipleLists();
+  const {
+    mutate: mutateMultipleCards,
+    updateMultipleCards,
+    prevCardsRef,
+  } = useUpdateMultipleCards();
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     const draggedList = active.data.current?.list;
@@ -25,6 +35,9 @@ const useDragHandlers = () => {
     if (draggedCard) {
       setActiveCard(draggedCard);
     }
+
+    prevListsRef.current = [...lists];
+    prevCardsRef.current = [...cards];
   };
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
@@ -69,48 +82,34 @@ const useDragHandlers = () => {
       active.data.current.type === "card" &&
       over.data.current.type === "card"
     ) {
-      const overCardIndex = cards.findIndex((card) => card._id === over.id);
-      const activeCardIndex = cards.findIndex((card) => card._id === active.id);
+      if (active.data.current.card.listId === over.data.current.card.listId) {
+        const listId = active.data.current.card.listId;
 
-      setCards((cards) => {
-        cards[activeCardIndex].listId = cards[overCardIndex].listId;
+        let cardsCopy = [...cards];
 
-        cards[activeCardIndex].position = overCardIndex;
-        cards[overCardIndex].position = activeCardIndex;
+        const oldIndex = cardsCopy.findIndex((card) => card._id === active.id);
+        const newIndex = cardsCopy.findIndex((card) => card._id === over.id);
 
-        const newCards = arrayMove(cards, activeCardIndex, overCardIndex);
+        cardsCopy = arrayMove(cardsCopy, oldIndex, newIndex);
 
-        const newCardsInActiveList = newCards.filter(
+        const cardsInList = cardsCopy.filter((card) => card.listId === listId);
+        const restCards = cardsCopy.filter((card) => card.listId !== listId);
+
+        const orderedCardsInOverList = cardsInList.map((card, idx) => {
+          return {
+            ...card,
+            position: idx,
+          };
+        });
+
+        const cardsInOldList = cardsCopy.filter(
           (card) => card.listId === active.data.current.card.listId
         );
 
-        const newCardsInOverList = newCards.filter(
-          (card) => card.listId === over.data.current.card.listId
-        );
+        mutateMultipleCards([...orderedCardsInOverList, ...cardsInOldList]);
 
-        const newCardsWithNewPostionsInActiveList = newCardsInActiveList.map(
-          (card, idx) => {
-            return {
-              ...card,
-              position: idx,
-            };
-          }
-        );
-
-        const newCardsWithNewPostionsInOverList = newCardsInOverList.map(
-          (card, idx) => {
-            return {
-              ...card,
-              position: idx,
-            };
-          }
-        );
-
-        mutateMultipleCards(newCardsWithNewPostionsInActiveList);
-        mutateMultipleCards(newCardsWithNewPostionsInOverList);
-
-        return newCards;
-      });
+        setCards([...restCards, ...orderedCardsInOverList]);
+      }
     }
 
     if (
@@ -120,10 +119,27 @@ const useDragHandlers = () => {
       const overListIndex = lists.findIndex((list) => list._id === over.id);
       const activeCardIndex = cards.findIndex((card) => card._id === active.id);
 
+      const listLength = cards.filter(
+        (card) => card.listId === lists[overListIndex]._id
+      ).length;
+
+      const cardsInActiveList = cards.filter(
+        (card) => card.listId === cards[activeCardIndex].listId
+      );
+
+      const reorderedCardsInActiveList = cardsInActiveList.map((card, idx) => {
+        return {
+          ...card,
+          position: idx,
+        };
+      });
+
+      updateMultipleCards(reorderedCardsInActiveList);
+
       setCards((cards) => {
         cards[activeCardIndex].listId = lists[overListIndex]._id;
 
-        cards[activeCardIndex].position = 0;
+        cards[activeCardIndex].position = listLength;
 
         return cards;
       });
@@ -139,14 +155,75 @@ const useDragHandlers = () => {
       active.data.current.type === "card" &&
       over.data.current.type === "card"
     ) {
-      const overCardIndex = cards.findIndex((card) => card._id === over.id);
-      const activeCardIndex = cards.findIndex((card) => card._id === active.id);
+      if (active.data.current.card.listId === over.data.current.card.listId) {
+        const listId = active.data.current.card.listId;
 
-      setCards((cards) => {
-        cards[activeCardIndex].listId = cards[overCardIndex].listId;
+        const cardsInList = cards.filter((card) => card.listId === listId);
 
-        return arrayMove(cards, activeCardIndex, overCardIndex);
-      });
+        const reorderedCards = cardsInList.map((card, idx) => {
+          return {
+            ...card,
+            position: idx,
+          };
+        });
+
+        setCards((cards) => {
+          const oldIndex = cards.findIndex((card) => card._id === active.id);
+          const newIndex = cards.findIndex((card) => card._id === over.id);
+
+          cards = cards.map((card) =>
+            card.listId === listId
+              ? reorderedCards.find((c) => c._id === card._id)
+              : card
+          );
+
+          return arrayMove(cards, oldIndex, newIndex);
+        });
+      } else {
+        const overCardIndex = cards.findIndex((card) => card._id === over.id);
+        const activeCardIndex = cards.findIndex(
+          (card) => card._id === active.id
+        );
+        setCards((cards) => {
+          const activeCardListId = active.data.current.card.listId;
+          const overCardListId = cards[overCardIndex].listId;
+          cards[activeCardIndex].listId = overCardListId;
+          const cardsInOverList = cards.filter(
+            (card) => card.listId === overCardListId
+          );
+          const cardsInActiveList = cards.filter(
+            (card) => card.listId === activeCardListId
+          );
+          const reorderedCardsInOverList = cardsInOverList.map((card, idx) => {
+            return {
+              ...card,
+              position: idx,
+            };
+          });
+          const reorderedCardsInActiveList = cardsInActiveList.map(
+            (card, idx) => {
+              return {
+                ...card,
+                position: idx,
+              };
+            }
+          );
+          const newCards = cards.map((card) => {
+            if (card.listId === activeCardListId)
+              return reorderedCardsInActiveList.find((c) => c._id === card._id);
+            if (card.listId === overCardListId)
+              return reorderedCardsInOverList.find((c) => c._id === card._id);
+            return card;
+          });
+          // console.log("newCards");
+          // console.log(newCards);
+          // console.log("reorderedCardsInActiveList");
+          // console.log(reorderedCardsInActiveList);
+          // console.log("reorderedCardsInOverList");
+          // console.log(reorderedCardsInOverList);
+          return newCards;
+        });
+      }
     }
 
     if (
@@ -168,8 +245,8 @@ const useDragHandlers = () => {
     activeList,
     activeCard,
     handleDragStart,
-    handleDragEnd,
     handleDragOver,
+    handleDragEnd,
   };
 };
 

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import CustomTextarea from "../CustomTextarea";
 import useUpdateList from "@/hooks/lists/useUpdateList";
 import { List } from "@/types/list.types";
 
-const ListHeader = ({ list }: { list: List }) => {
+const ListHeader = memo(({ list }: { list: List }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(list.title);
 
@@ -12,13 +12,14 @@ const ListHeader = ({ list }: { list: List }) => {
   const handleSaveChange = () => {
     updateList({ ...list, title });
     setIsEditingTitle(false);
+    setTitle(null);
   };
 
   return isEditingTitle ? (
     <CustomTextarea
       className="resize-none break-words min-h-min p-0 rounded-none"
       placeholder="List title"
-      value={title}
+      value={title || list.title}
       onChange={(e) => {
         setTitle(e.target.value);
       }}
@@ -42,9 +43,9 @@ const ListHeader = ({ list }: { list: List }) => {
       }}
       className="break-all w-full text-left"
     >
-      {title}
+      {title || list.title}
     </button>
   );
-};
+});
 
 export default ListHeader;

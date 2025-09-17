@@ -1,16 +1,20 @@
 import { BoardContext } from "@/contexts/BoardContext";
 import { List, ListToUpdate } from "@/types/list.types";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { useContext } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import useApiRequest from "../useApiRequest";
+import { toast } from "@/hooks/use-toast";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useUpdateMultipleLists = () => {
   const { boardId } = useParams();
   const { setLists } = useContext(BoardContext);
+
+  const prevListsRef = useRef<List[]>([]);
+
+  const queryClient = useQueryClient();
 
   const apiRequest = useApiRequest();
 
@@ -20,6 +24,28 @@ const useUpdateMultipleLists = () => {
         method: "PATCH",
         data: { lists: listsToUpdate },
       }),
+
+    onMutate: () => {
+      return prevListsRef.current;
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["lists", boardId] });
+
+      toast({
+        title: "Lists were updated successfully",
+        variant: "default",
+      });
+    },
+
+    onError: (_, __, prevLists) => {
+      toast({
+        title: "Error",
+        description: "Error updating lists",
+        variant: "destructive",
+      });
+      setLists(prevLists);
+    },
   });
 
   const updateMultipleLists = (updatedLists: List[]) => {
@@ -35,7 +61,7 @@ const useUpdateMultipleLists = () => {
     updateMultipleListsMutation.mutate(updatedLists);
   };
 
-  return { updateMultipleLists, ...updateMultipleListsMutation };
+  return { updateMultipleLists, ...updateMultipleListsMutation, prevListsRef };
 };
 
 export default useUpdateMultipleLists;

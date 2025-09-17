@@ -1,9 +1,11 @@
 import {
+  Collision,
   DndContext,
   DragOverlay,
   MouseSensor,
   TouchSensor,
   closestCorners,
+  rectIntersection,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -13,13 +15,13 @@ import {
 } from "@dnd-kit/sortable";
 import ScrollContainer from "react-indiana-drag-scroll";
 import AddNewList from "./AddNewList";
-import { TaskList } from "./TaskList";
 import useGetLists from "@/hooks/lists/useGetLists";
 import SortableList from "./SortableList";
-import { TaskCard } from "./TaskCard";
 import { createPortal } from "react-dom";
 import useGetCards from "@/hooks/cards/useGetCards";
 import useDragHandlers from "@/hooks/useDragHandlers";
+import TaskListOverlay from "./TaskListOverlay";
+import TaskCardOverlay from "./TaskCardOverlay";
 
 const Lists = () => {
   const {
@@ -31,7 +33,6 @@ const Lists = () => {
   } = useDragHandlers();
 
   const { isSuccess: isListsSuccess, lists } = useGetLists();
-  const { isSuccess: isCardsSuccess, cards } = useGetCards();
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -72,16 +73,7 @@ const Lists = () => {
           ignoreElements=".draggable-item"
         >
           {lists.map((list) => {
-            const listCards = cards.filter((card) => card.listId === list._id);
-
-            return (
-              <SortableList
-                cards={listCards}
-                id={list._id}
-                list={list}
-                key={list._id}
-              />
-            );
+            return <SortableList id={list._id} list={list} key={list._id} />;
           })}
 
           <AddNewList listsLength={lists.length} />
@@ -90,13 +82,8 @@ const Lists = () => {
 
       {createPortal(
         <DragOverlay>
-          {activeList && (
-            <TaskList
-              cards={cards.filter((card) => card.listId === activeList._id)}
-              list={activeList}
-            />
-          )}
-          {activeCard && <TaskCard card={activeCard} />}
+          {activeList && <TaskListOverlay list={activeList} />}
+          {activeCard && <TaskCardOverlay card={activeCard} />}
         </DragOverlay>,
         document.body
       )}

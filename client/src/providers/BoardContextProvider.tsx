@@ -1,7 +1,7 @@
 import { Card } from "@/types/card.types";
 import { List } from "@/types/list.types";
 import { useState } from "react";
-import { BoardContext } from "./BoardContext";
+import { BoardContext } from "@/contexts/BoardContext";
 
 const BoardContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [lists, setLists] = useState<List[]>([]);

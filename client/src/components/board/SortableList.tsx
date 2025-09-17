@@ -8,7 +8,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 interface SortableProps {
   id: string;
   list: List;
-  cards: Card[];
 }
 
 const SortableList = (props: SortableProps) => {
@@ -40,7 +39,6 @@ const SortableList = (props: SortableProps) => {
     <div ref={setNodeRef} style={style} className={`h-full task-card`}>
       {!isDragging && (
         <TaskList
-          cards={props.cards}
           list={props.list}
           setActivatorNodeRef={setActivatorNodeRef}
           attributes={attributes}

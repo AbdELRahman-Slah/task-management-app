@@ -3,7 +3,7 @@ import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import Lists from "@/components/board/Lists";
-import BoardContextProvider from "@/contexts/BoardContextProvider";
+import BoardContextProvider from "@/providers/BoardContextProvider";
 
 const Board = () => {
   const [boardHeight, setBoardHeight] = useState(0);

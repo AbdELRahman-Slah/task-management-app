@@ -23,8 +23,6 @@ const Dashboard = () => {
     select: (data) => data.data.data,
   });
 
-  const queryClient = useQueryClient();
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-background">
       <Navbar isLoggedIn={true} />
