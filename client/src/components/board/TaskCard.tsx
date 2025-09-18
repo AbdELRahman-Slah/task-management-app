@@ -53,7 +53,7 @@ export const TaskCard = ({ card }: { card: CardType }) => {
             {card.title}
           </h4>
           <button
-            className="self-center bg-gradient-card hover:bg-red-950 p-2 rounded"
+            className="self-center bg-card hover:bg-red-950 p-2 rounded"
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteCard();

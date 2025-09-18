@@ -51,7 +51,7 @@ const SortableList = (props: SortableProps) => {
         <div className="h-full">
           <div
             style={{ height: listHeight }}
-            className={`min-w-80 sm:min-w-96 bg-gradient-card backdrop-blur-sm border-border/50 rounded-md`}
+            className={`min-w-80 sm:min-w-96 bg-list backdrop-blur-sm border-border/50 rounded-md`}
           />
         </div>
       )}

@@ -6,7 +6,7 @@ export const BoardListSkeleton: React.FC = () => {
       {[...Array(6)].map((_, idx) => (
         <Card
           key={idx}
-          className="group hover:shadow-card transition-all duration-1000 overflow-hidden bg-gradient-card backdrop-blur-sm border-border/50 animate-pulse"
+          className="group hover:shadow-card transition-all duration-1000 overflow-hidden bg-card backdrop-blur-sm border-border/50 animate-pulse"
         >
           <div className="h-32 bg-muted relative">
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300" />

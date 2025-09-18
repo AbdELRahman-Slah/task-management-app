@@ -40,7 +40,7 @@ export const Navbar = ({
 
   return (
     <nav
-      className="bg-card/80 backdrop-blur-sm border-b border-border/50 px-6 py-4"
+      className="bg-card backdrop-blur-sm border-b border-border/50 px-6 py-4"
       ref={navbarRef}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">

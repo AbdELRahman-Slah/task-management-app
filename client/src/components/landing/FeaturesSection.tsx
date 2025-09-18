@@ -16,7 +16,7 @@ const FeaturesSection = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          <Card className="p-8 bg-gradient-card rounded-3xl ring-1 ring-border backdrop-blur-sm border-border/50 shadow-soft/30 transition-all duration-300">
+          <Card className="p-8 bg-card rounded-3xl ring-1 ring-border backdrop-blur-sm border-border/50 shadow-soft/30 transition-all duration-300">
             <div className="space-y-4">
               <div className="bg-primary/10 p-3 rounded-lg w-fit">
                 <CheckCircle className="h-6 w-6 text-primary" />
@@ -29,7 +29,7 @@ const FeaturesSection = () => {
             </div>
           </Card>
 
-          <Card className="p-8 bg-gradient-card rounded-3xl ring-1 ring-border backdrop-blur-sm border-border/50 shadow-soft/30 transition-all duration-300">
+          <Card className="p-8 bg-card rounded-3xl ring-1 ring-border backdrop-blur-sm border-border/50 shadow-soft/30 transition-all duration-300">
             <div className="space-y-4">
               <div className="bg-primary/10 p-3 rounded-lg w-fit">
                 <Users className="h-6 w-6 text-primary" />
@@ -42,7 +42,7 @@ const FeaturesSection = () => {
             </div>
           </Card>
 
-          <Card className="p-8 bg-gradient-card rounded-3xl ring-1 ring-border backdrop-blur-sm border-border/50 shadow-soft/30 transition-all duration-300">
+          <Card className="p-8 bg-card rounded-3xl ring-1 ring-border backdrop-blur-sm border-border/50 shadow-soft/30 transition-all duration-300">
             <div className="space-y-4">
               <div className="bg-primary/10 p-3 rounded-lg w-fit">
                 <Zap className="h-6 w-6 text-primary" />

@@ -1,6 +1,7 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { List } from "@/types/list.types";
 import { Card } from "@/types/card.types";
+import { Board } from "@/types/board.types";
 
 export const BoardContext = createContext<{
   lists: List[];

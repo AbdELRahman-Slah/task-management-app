@@ -9,9 +9,9 @@ const useGetBoards = () => {
 
   return useQuery({
     queryKey: ["boards"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await apiRequest<BoardsApiResponse>(`${API_URL}/boards`, {
-        method: "get",
+        method: "GET",
       });
       return res.data.data.boards
     },

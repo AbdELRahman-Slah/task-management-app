@@ -19,7 +19,7 @@ const TaskListOverlay = ({ list }: { list: List }) => {
 
   return (
     <div className="h-full">
-      <Card className="min-w-80 sm:min-w-96 max-h-full bg-gradient-card backdrop-blur-sm border-border/50 transition-all duration-200 flex flex-col rounded-md draggable-item">
+      <Card className="min-w-80 sm:min-w-96 max-h-full bg-list backdrop-blur-sm border-border/50 transition-all duration-200 flex flex-col rounded-md draggable-item">
         <CardHeader className="flex justify-between flex-row gap-3 items-center md:touch-none">
           <CardTitle className="text-sm font-semibold text-foreground flex-1">
             <div className="break-all w-full text-left">{list.title}</div>

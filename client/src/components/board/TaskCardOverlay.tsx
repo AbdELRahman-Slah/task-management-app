@@ -10,7 +10,7 @@ const TaskCardOverlay = ({ card }: { card: CardType }) => {
           <h4 className="font-medium text-sm text-foreground leading-snug">
             {card.title}
           </h4>
-          <button className="self-center bg-gradient-card hover:bg-red-950 p-2 rounded">
+          <button className="self-center bg-card hover:bg-red-950 p-2 rounded">
             <Trash2Icon size={20} className="stroke-gray-300" />
           </button>
         </div>

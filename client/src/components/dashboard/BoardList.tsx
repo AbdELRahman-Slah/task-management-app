@@ -2,8 +2,7 @@ import { Users, Calendar, Plus, MoreVertical } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { Link } from "react-router-dom";
 import CreateBoardModal from "./CreateBoardModal";
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useContext, useState } from "react";
 import { Board } from "@/types/board.types";
 import {
   DropdownMenu,
@@ -12,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import useDeleteBoard from "@/hooks/boards/useDeleteBoard";
+import { BoardContext } from "@/contexts/BoardContext";
 
 const BoardList = ({ boards }: { boards: Board[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +22,7 @@ const BoardList = ({ boards }: { boards: Board[] }) => {
       {!!boards.length &&
         boards.map((board) => (
           <Link key={board._id} to={`/board/${board._id}`}>
-            <Card className="group hover:ring-1 hover:ring-ring/40 transition-all duration-100 overflow-hidden bg-gradient-card backdrop-blur-sm border-border/50">
+            <Card className="group hover:ring-1 hover:ring-ring/40 transition-all duration-100 overflow-hidden bg-list backdrop-blur-sm border-border/50">
               <div className={`h-32 ${board.background} relative`}>
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300"></div>
               </div>
@@ -34,7 +34,7 @@ const BoardList = ({ boards }: { boards: Board[] }) => {
                     </h3>
 
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="hover:ring-1 ring-inset hover:bg-card rounded-full p-2">
+                      <DropdownMenuTrigger className="hover:ring-1 ring-inset hover:bg-list rounded-full p-2">
                         <MoreVertical className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
@@ -76,7 +76,7 @@ const BoardList = ({ boards }: { boards: Board[] }) => {
 
       {/* Create New Board Card */}
       <Card
-        className="group hover:ring-1 hover:ring-ring/40 transition-all duration-100 bg-gradient-card backdrop-blur-sm border-border/50 border-dashed"
+        className="group hover:ring-1 hover:ring-ring/40 transition-all duration-100 bg-list backdrop-blur-sm border-border/50 border-dashed"
         onClick={() => setIsModalOpen(true)}
       >
         <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center">

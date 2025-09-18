@@ -28,7 +28,7 @@ export default function AddNewList({ listsLength }: { listsLength: number }) {
   // TODO: add loading indicator to return real id
 
   return (
-    <Card className="min-w-[300px] bg-gradient-card backdrop-blur-sm border-border/50 border-dashed h-fit task-card">
+    <Card className="min-w-[300px] bg-list shadow-sm backdrop-blur-sm border-border/50 border-dashed h-fit task-card">
       <CardContent className="p-4 h-fit">
         {isAddingList ? (
           <>
