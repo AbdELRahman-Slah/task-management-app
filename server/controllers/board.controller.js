@@ -1,6 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const catchWrapper = require("../middlewares/catchWrapper.middleware");
 const Board = require("../models/board.model");
+const List = require("../models/list.model");
+const Card = require("../models/card.model");
 const AppError = require("../utils/AppError");
 
 const getAllBoards = catchWrapper(async (req, res) => {
@@ -146,6 +148,10 @@ const deleteBoard = catchWrapper(async (req, res, next) => {
   }
 
   await Board.deleteOne({ _id: boardId });
+
+  await List.deleteMany({ boardId });
+
+  await Card.deleteMany({ boardId });
 
   res.status(200).json({
     status: "success",
