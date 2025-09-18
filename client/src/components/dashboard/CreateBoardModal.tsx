@@ -4,11 +4,11 @@ import { Button } from "../ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import useApiRequest from "@/hooks/useApiRequest";
+import useCreateBoard from "@/hooks/boards/useCreateBoard";
 
 interface CreateBoardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onBoardCreated: () => void;
 }
 
 const backgrounds = [
@@ -23,38 +23,17 @@ interface User {
   role: string;
 }
 
-interface Data {
-  title: string;
-  users: User[];
-  background: string;
-}
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
   isOpen,
   onClose,
-  onBoardCreated,
 }) => {
-  // const initUsers = [{ id: userId, role: "ADMIN" }];
-
   const [title, setTitle] = useState("");
   const [users, setUsers] = useState<User[]>();
   const [background, setBackground] = useState(backgrounds[0]);
   const [loading, setLoading] = useState(false);
 
-  const apiRequest = useApiRequest();
-
-  const mutation = useMutation({
-    mutationFn: (data: Data) =>
-      apiRequest(`${API_URL}/boards`, {
-        method: "POST",
-        data,
-      }),
-    onSuccess: () => {
-      if (onBoardCreated) onBoardCreated();
-    },
-  });
+  const mutation = useCreateBoard();
 
   if (!isOpen) return null;
 
@@ -62,7 +41,14 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
     e.preventDefault();
     setLoading(true);
 
-    mutation.mutate({ title, users, background });
+    mutation.mutate(
+      { title, users, background },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      }
+    );
 
     setLoading(false);
     setTitle("");

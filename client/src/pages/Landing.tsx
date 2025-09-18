@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/global/Navbar";
 import { CheckCircle, Users, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";

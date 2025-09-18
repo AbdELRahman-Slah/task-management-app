@@ -2,7 +2,7 @@ import { Plus, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { useContext, useState } from "react";
-import CustomTextarea from "../CustomTextarea";
+import CustomTextarea from "../global/CustomTextarea";
 import useCreateList from "@/hooks/lists/useCreateList";
 import { v4 as uuidv4 } from "uuid";
 import Lists from "./Lists";

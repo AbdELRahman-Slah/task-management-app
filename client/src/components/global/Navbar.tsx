@@ -1,5 +1,5 @@
-import { Button } from "./ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "../ui/button";
+import { ThemeToggle } from "@/components/global/theme-toggle";
 import { CircleCheckBig } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

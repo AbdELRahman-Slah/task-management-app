@@ -3,9 +3,9 @@ import z from "zod";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomFormField } from "../CustomField";
+import { CustomFormField } from "../global/CustomField";
 import { Form } from "../ui/form";
-import useLogin from "@/hooks/useLogin";
+import useLogin from "@/hooks/auth/useLogin";
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),

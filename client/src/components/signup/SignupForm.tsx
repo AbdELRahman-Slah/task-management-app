@@ -8,7 +8,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import z from "zod";
-import { CustomFormField } from "../CustomField";
+import { CustomFormField } from "../global/CustomField";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

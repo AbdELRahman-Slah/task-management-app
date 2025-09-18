@@ -1,7 +1,7 @@
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import CustomTextarea from "../CustomTextarea";
+import CustomTextarea from "../global/CustomTextarea";
 import { useParams } from "react-router-dom";
 import useCreateCard from "@/hooks/cards/useCreateCard";
 import { Card } from "@/types/card.types";

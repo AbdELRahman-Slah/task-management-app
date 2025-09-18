@@ -1,5 +1,5 @@
 import { TextareaHTMLAttributes, useEffect, useRef } from "react";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../ui/textarea";
 
 const CustomTextarea = (props: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);

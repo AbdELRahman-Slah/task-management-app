@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import CustomTextarea from "../CustomTextarea";
+import CustomTextarea from "../global/CustomTextarea";
 import useUpdateList from "@/hooks/lists/useUpdateList";
 import { List } from "@/types/list.types";
 

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/global/Navbar";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import Lists from "@/components/board/Lists";
