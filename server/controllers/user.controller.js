@@ -7,7 +7,6 @@ const {
   generateUserRefreshToken,
 } = require("../utils/generateUserToken");
 const ms = require("ms");
-const jwt = require("jsonwebtoken");
 
 const registerUser = catchWrapper(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
@@ -25,26 +24,6 @@ const registerUser = catchWrapper(async (req, res, next) => {
     lastName,
     email,
     password: hashedPassword,
-  });
-
-  const accessToken = generateUserAccessToken(newUser._id);
-  const refreshToken = generateUserRefreshToken(newUser._id);
-
-  const accessTokenExpiresIn = ms(process.env.ACCESS_TOKEN_EXPIRES_IN);
-  const refreshTokenExpiresIn = ms(process.env.REFRESH_TOKEN_EXPIRES_IN);
-
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    maxAge: accessTokenExpiresIn,
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    maxAge: refreshTokenExpiresIn,
   });
 
   res.status(200).json({
@@ -110,6 +89,28 @@ const loginUser = catchWrapper(async (req, res, next) => {
   });
 });
 
+const getCurrentUser = catchWrapper(async (req, res, next) => {
+  const { userId } = req.user;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return next(new AppError("User does not exist", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    },
+  });
+});
+
 const refreshUserSession = catchWrapper(async (req, res, next) => {
   const { userId } = req.user;
 
@@ -149,6 +150,7 @@ const logoutUser = catchWrapper(async (req, res, next) => {
 module.exports = {
   registerUser,
   loginUser,
+  getCurrentUser,
   refreshUserSession,
   logoutUser,
 };
