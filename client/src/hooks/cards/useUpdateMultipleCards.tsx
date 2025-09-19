@@ -61,9 +61,6 @@ const useUpdateMultipleCards = () => {
       );
     });
 
-    console.log("cards", cards);
-    console.log("prevCards", prevCardsRef.current);
-
     mutation.mutate(cardsToUpdate);
   };
 

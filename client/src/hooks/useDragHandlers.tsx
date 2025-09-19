@@ -215,12 +215,7 @@ const useDragHandlers = () => {
               return reorderedCardsInOverList.find((c) => c._id === card._id);
             return card;
           });
-          // console.log("newCards");
-          // console.log(newCards);
-          // console.log("reorderedCardsInActiveList");
-          // console.log(reorderedCardsInActiveList);
-          // console.log("reorderedCardsInOverList");
-          // console.log(reorderedCardsInOverList);
+
           return newCards;
         });
       }

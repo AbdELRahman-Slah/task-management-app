@@ -17,16 +17,12 @@ const Board = () => {
 
   const [boardBackground, setBoardBackground] = useState<string>("");
 
-  console.log(boardBackground);
-
   const { data, isPending } = useGetSingleBoard();
 
   useEffect(() => {
     if (data) {
       setBoardBackground(data[0].background);
-      console.log(data[0].background);
     }
-    console.log(data);
   }, [data]);
 
   useLayoutEffect(() => {

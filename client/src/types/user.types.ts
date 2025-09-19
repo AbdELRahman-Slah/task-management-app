@@ -4,3 +4,9 @@ export interface User {
   lastName: string;
   email: string;
 }
+
+export interface LoginApiResponse {
+  status: string;
+  data: { user: User };
+  message?: string;
+}

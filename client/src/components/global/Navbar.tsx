@@ -10,10 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ref } from "react";
+import { Ref, useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useIsMobile } from "@/hooks/use-mobile";
+import AuthContext from "@/contexts/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -26,6 +27,8 @@ export const Navbar = ({
 }) => {
   const navigate = useNavigate();
 
+  const { clearUser } = useContext(AuthContext);
+
   const isMobile = useIsMobile();
 
   const { mutate } = useMutation({
@@ -33,7 +36,8 @@ export const Navbar = ({
       return axios.post(`${API_URL}/users/logout`);
     },
     onSuccess: () => {
-      localStorage.clear();
+      clearUser();
+
       navigate("/");
     },
   });

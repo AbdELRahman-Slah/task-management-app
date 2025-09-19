@@ -1,11 +1,15 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "./use-toast";
+import AuthContext from "@/contexts/AuthContext";
+import { useContext } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useApiRequest = () => {
   const navigate = useNavigate();
+
+  const { clearUser } = useContext(AuthContext);
 
   async function apiRequest<T>(
     url: string,
@@ -36,12 +40,14 @@ const useApiRequest = () => {
             return apiRequest<T>(url, options);
           }
         } catch (e) {
-          navigate("/login");
+          clearUser();
+
           toast({
             title: "Session expired",
             description: "Please log in again",
             variant: "destructive",
           });
+
           throw axiosError;
         }
       }

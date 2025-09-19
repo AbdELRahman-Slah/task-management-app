@@ -44,8 +44,6 @@ const useUpdateList = () => {
     },
 
     onError: (_, listToUpdate, prevList) => {
-      console.log(prevList._id);
-
       setLists((lists) =>
         lists.map((list) => (list._id === listToUpdate._id ? prevList : list))
       );

@@ -42,7 +42,6 @@ const useDeleteList = () => {
       deleteMultipleCards(context?.cardsInListIds);
     },
     onError: (_, __, context) => {
-      console.log('context?.prevList.position', context?.prevList.position)
       setLists((lists) => {
         lists.splice(context?.prevList.position, 0, context?.prevList);
 
