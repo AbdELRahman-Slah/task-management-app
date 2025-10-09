@@ -1,11 +1,9 @@
 import {
-  Collision,
   DndContext,
   DragOverlay,
   MouseSensor,
   TouchSensor,
   closestCorners,
-  rectIntersection,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -18,7 +16,6 @@ import AddNewList from "./AddNewList";
 import useGetLists from "@/hooks/lists/useGetLists";
 import SortableList from "./SortableList";
 import { createPortal } from "react-dom";
-import useGetCards from "@/hooks/cards/useGetCards";
 import useDragHandlers from "@/hooks/useDragHandlers";
 import TaskListOverlay from "./TaskListOverlay";
 import TaskCardOverlay from "./TaskCardOverlay";

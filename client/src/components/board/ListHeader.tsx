@@ -19,7 +19,7 @@ const ListHeader = memo(({ list }: { list: List }) => {
     <CustomTextarea
       className="resize-none break-words min-h-min p-0 rounded-none"
       placeholder="List title"
-      value={title || list.title}
+      value={isEditingTitle ? title : list.title}
       onChange={(e) => {
         setTitle(e.target.value);
       }}
