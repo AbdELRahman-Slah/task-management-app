@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import z from "zod";
 import { CustomFormField } from "../global/CustomField";
+import { PasswordFormField } from "../global/PasswordFormfield";
+import { CircleX } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -33,7 +35,7 @@ type RegisterFormSchema = z.infer<typeof registerFormSchema>;
 const SignupForm = () => {
   const navigate = useNavigate();
 
-  const mutation = useMutation({
+  const { mutate, isError, error } = useMutation({
     mutationFn: (formData: RegisterFormSchema) => {
       return axios.post(`${API_URL}/users/register`, formData);
     },
@@ -70,7 +72,7 @@ const SignupForm = () => {
   });
 
   const onSubmit = (values: RegisterFormSchema) => {
-    mutation.mutate(values);
+    mutate(values);
   };
 
   return (
@@ -98,12 +100,17 @@ const SignupForm = () => {
             placeholder="Email"
             control={form.control}
           />
-          <CustomFormField
-            name="password"
-            placeholder="Password"
-            control={form.control}
-          />
+          <PasswordFormField control={form.control} />
         </div>
+
+        {isError && (
+          <div className="rounded-sm bg-destructive text-destructive-foreground flex flex-row items-center gap-3 py-4 px-4 opacity-95 border">
+            <div>
+              <CircleX size={20} />
+            </div>
+            <p>{error.response.data.message}</p>
+          </div>
+        )}
 
         <Button
           type="submit"

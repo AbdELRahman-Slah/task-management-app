@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomFormField } from "../global/CustomField";
 import { Form } from "../ui/form";
 import useLogin from "@/hooks/auth/useLogin";
+import { CircleX } from "lucide-react";
+import { PasswordFormField } from "../global/PasswordFormfield";
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -18,7 +20,7 @@ const loginFormSchema = z.object({
 export type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
 const LoginForm = () => {
-  const { mutate } = useLogin();
+  const { mutate, isError, error } = useLogin();
 
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -41,12 +43,17 @@ const LoginForm = () => {
             placeholder="Email"
             control={form.control}
           />
-          <CustomFormField
-            name="password"
-            placeholder="Password"
-            control={form.control}
-          />
+          <PasswordFormField control={form.control} />
         </div>
+
+        {isError && (
+          <div className="rounded-sm bg-destructive text-destructive-foreground flex flex-row items-center gap-3 py-4 px-4 opacity-95 border">
+            <div>
+              <CircleX size={20} />
+            </div>
+            <p>{error.response.data.message}</p>
+          </div>
+        )}
 
         <Button
           type="submit"

@@ -38,10 +38,8 @@ const BoardList = ({ boards }: { boards: Board[] }) => {
                         <MoreVertical className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>
-                          <Link to={`/board/${board._id}/settings`}>
-                            Settings
-                          </Link>
+                        <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                          Settings
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-red-500 hover:!bg-red-600 hover:text-white"

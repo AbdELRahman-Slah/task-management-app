@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "@/hooks/use-toast";
 import { LoginApiResponse } from "@/types/user.types";
 import { LoginFormSchema } from "@/components/login/LoginForm";
@@ -8,11 +7,13 @@ import { LoginFormSchema } from "@/components/login/LoginForm";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useLogin = () => {
-  const navigate = useNavigate();
-
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<
+    LoginApiResponse["data"]["user"],
+    AxiosError<LoginApiResponse>,
+    LoginFormSchema
+  >({
     mutationFn: async (formData: LoginFormSchema) => {
       const res = await axios.post<LoginApiResponse>(
         `${API_URL}/users/login`,
@@ -39,8 +40,6 @@ const useLogin = () => {
         description: "Invalid email or password",
         variant: "destructive",
       });
-
-      navigate("/");
     },
   });
 };
