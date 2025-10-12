@@ -42,11 +42,11 @@ const useApiRequest = () => {
         } catch (e) {
           clearUser();
 
-          toast({
-            title: "Session expired",
-            description: "Please log in again",
-            variant: "destructive",
-          });
+          // toast({
+          //   title: "Session expired",
+          //   description: "Please log in again",
+          //   variant: "destructive",
+          // });
 
           throw axiosError;
         }

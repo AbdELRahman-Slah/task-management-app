@@ -20,7 +20,7 @@ const loginFormSchema = z.object({
 export type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
 const LoginForm = () => {
-  const { mutate, isError, error } = useLogin();
+  const { mutate, isPending, isError, error } = useLogin();
 
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -58,6 +58,7 @@ const LoginForm = () => {
         <Button
           type="submit"
           className="w-full bg-gradient-primary shadow-primary"
+          disabled={isPending}
         >
           Login
         </Button>

@@ -35,7 +35,7 @@ type RegisterFormSchema = z.infer<typeof registerFormSchema>;
 const SignupForm = () => {
   const navigate = useNavigate();
 
-  const { mutate, isError, error } = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: (formData: RegisterFormSchema) => {
       return axios.post(`${API_URL}/users/register`, formData);
     },
@@ -115,6 +115,7 @@ const SignupForm = () => {
         <Button
           type="submit"
           className="w-full bg-gradient-primary shadow-primary mt-3"
+          disabled={isPending}
         >
           Create Account
         </Button>

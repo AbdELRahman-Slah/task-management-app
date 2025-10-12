@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
 import { LoginApiResponse } from "@/types/user.types";
 import { LoginFormSchema } from "@/components/login/LoginForm";

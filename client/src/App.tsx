@@ -20,6 +20,7 @@ import NotFound from "./pages/NotFound";
 import { useContext } from "react";
 import AuthContext from "./contexts/AuthContext";
 import AuthContextProvider from "./providers/AuthContextProvider";
+import Loader from "./components/global/Loader";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,7 @@ const ProtectedRoute = () => {
   const location = useLocation();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (!user) {
@@ -42,7 +43,7 @@ const PublicRoute = () => {
   const { user, isLoading } = useContext(AuthContext);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (user) {

@@ -18,6 +18,7 @@ import {
 import SortableCard from "./SortableCard";
 import React, { memo, useEffect, useMemo, useRef } from "react";
 import useGetCards from "@/hooks/cards/useGetCards";
+import { Skeleton } from "../ui/skeleton";
 
 interface TaskListProps {
   list: List;
@@ -35,7 +36,11 @@ export const TaskList = memo(
     listeners,
     setListHeight,
   }: TaskListProps) => {
-    const { isSuccess: isCardsSuccess, cards } = useGetCards();
+    const {
+      isSuccess: isCardsSuccess,
+      cards,
+      isLoading: isCardsLoading,
+    } = useGetCards();
 
     const listCards = useMemo(() => {
       return cards.filter((card) => card.listId === list._id);
@@ -73,14 +78,24 @@ export const TaskList = memo(
           </CardHeader>
 
           <CardContent className="py-0 px-4 flex flex-col gap-3 overflow-y-auto thin-scrollbar">
-            <SortableContext
-              items={cardIds}
-              strategy={verticalListSortingStrategy}
-            >
-              {listCards.map((card) => (
-                <SortableCard key={card._id} listId={list._id} card={card} />
-              ))}
-            </SortableContext>
+            {isCardsLoading && (
+              <>
+                <Skeleton className="rounded-sm h-20" />
+                <Skeleton className="rounded-sm h-20" />
+                <Skeleton className="rounded-sm h-20" />
+              </>
+            )}
+
+            {isCardsSuccess && (
+              <SortableContext
+                items={cardIds}
+                strategy={verticalListSortingStrategy}
+              >
+                {listCards.map((card) => (
+                  <SortableCard key={card._id} listId={list._id} card={card} />
+                ))}
+              </SortableContext>
+            )}
           </CardContent>
 
           <CardFooter className="py-4">

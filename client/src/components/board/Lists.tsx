@@ -19,6 +19,7 @@ import { createPortal } from "react-dom";
 import useDragHandlers from "@/hooks/useDragHandlers";
 import TaskListOverlay from "./TaskListOverlay";
 import TaskCardOverlay from "./TaskCardOverlay";
+import { Skeleton } from "../ui/skeleton";
 
 const Lists = () => {
   const {
@@ -29,7 +30,11 @@ const Lists = () => {
     handleDragOver,
   } = useDragHandlers();
 
-  const { isSuccess: isListsSuccess, lists } = useGetLists();
+  const {
+    isSuccess: isListsSuccess,
+    lists,
+    isLoading: isListsLoading,
+  } = useGetLists();
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -47,45 +52,61 @@ const Lists = () => {
 
   const listIds = lists?.map(({ _id }) => _id);
 
-  return isListsSuccess ? (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
-        <ScrollContainer
-          className="flex gap-6 px-6 overflow-x-auto select-none flex-grow pb-16 h-full scroll-container"
-          horizontal
-          vertical={false}
-          hideScrollbars={false}
-          onClick={() => {
-            const active = document.activeElement;
-            if (active instanceof HTMLElement) {
-              active.blur();
-            }
-          }}
-          ignoreElements=".draggable-item"
+  return (
+    <>
+      {isListsSuccess && (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
         >
-          {lists.map((list) => {
-            return <SortableList id={list._id} list={list} key={list._id} />;
-          })}
+          <SortableContext
+            items={listIds}
+            strategy={horizontalListSortingStrategy}
+          >
+            <ScrollContainer
+              className="flex gap-6 px-6 overflow-x-auto select-none flex-grow pb-16 h-full scroll-container"
+              horizontal
+              vertical={false}
+              hideScrollbars={false}
+              onClick={() => {
+                const active = document.activeElement;
+                if (active instanceof HTMLElement) {
+                  active.blur();
+                }
+              }}
+              ignoreElements=".draggable-item"
+            >
+              {lists.map((list) => {
+                return (
+                  <SortableList id={list._id} list={list} key={list._id} />
+                );
+              })}
 
-          <AddNewList listsLength={lists.length} />
-        </ScrollContainer>
-      </SortableContext>
+              <AddNewList listsLength={lists.length} />
+            </ScrollContainer>
+          </SortableContext>
 
-      {createPortal(
-        <DragOverlay>
-          {activeList && <TaskListOverlay list={activeList} />}
-          {activeCard && <TaskCardOverlay card={activeCard} />}
-        </DragOverlay>,
-        document.body
+          {createPortal(
+            <DragOverlay>
+              {activeList && <TaskListOverlay list={activeList} />}
+              {activeCard && <TaskCardOverlay card={activeCard} />}
+            </DragOverlay>,
+            document.body
+          )}
+        </DndContext>
       )}
-    </DndContext>
-  ) : null;
+      {isListsLoading && (
+        <div className="flex gap-6 px-6 overflow-x-auto select-none flex-grow pb-16 h-full">
+          <Skeleton className="min-w-80 sm:min-w-96 h-80 rounded-md" />
+          <Skeleton className="min-w-80 sm:min-w-96 h-96 rounded-md" />
+          <Skeleton className="min-w-80 sm:min-w-96 h-72 rounded-md" />
+        </div>
+      )}
+    </>
+  );
 };
 
 export default Lists;
