@@ -21,6 +21,8 @@ import { useContext } from "react";
 import AuthContext from "./contexts/AuthContext";
 import AuthContextProvider from "./providers/AuthContextProvider";
 import Loader from "./components/global/Loader";
+import BoardList from "./components/dashboard/BoardList";
+import Inbox from "./pages/Dashboard/Inbox";
 
 const queryClient = new QueryClient();
 
@@ -47,7 +49,7 @@ const PublicRoute = () => {
   }
 
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/dashboard/boards" replace />;
   }
 
   return <Outlet />;
@@ -72,7 +74,14 @@ const App = () => {
 
                 {/* Protected routes */}
                 <Route element={<ProtectedRoute />}>
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route element={<Dashboard />}>
+                    <Route path="/dashboard/boards" element={<BoardList />} />
+                    <Route path="/dashboard/inbox" element={<Inbox />} />
+                    <Route
+                      path="/dashboard/settings"
+                      element={<div>Settings</div>}
+                    />
+                  </Route>
                   <Route path="/board/:boardId" element={<Board />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />

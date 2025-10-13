@@ -2,8 +2,7 @@ import { Users, Calendar, Plus, MoreVertical } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { Link } from "react-router-dom";
 import CreateBoardModal from "./CreateBoardModal";
-import { useContext, useState } from "react";
-import { Board } from "@/types/board.types";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,17 +10,25 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import useDeleteBoard from "@/hooks/boards/useDeleteBoard";
-import { BoardContext } from "@/contexts/BoardContext";
+import BoardListSkeleton from "./BoardListSkeleton";
+import useGetBoards from "@/hooks/boards/useGetBoards";
 
-const BoardList = ({ boards }: { boards: Board[] }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const BoardList = () => {
+  const [isCreateBoardModalOpen, setIsCreateBoardModalOpen] = useState(false);
   const mutation = useDeleteBoard();
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  const { isPending, isError, data: boards, error } = useGetBoards();
+
+  return isPending ? (
+    <BoardListSkeleton />
+  ) : (
+    <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
       {!!boards.length &&
         boards.map((board) => (
-          <Link key={board._id} to={`/board/${board._id}`}>
+          <Link
+            key={board._id}
+            to={`/board/${board._id}`}
+          >
             <Card className="group hover:ring-1 hover:ring-ring/40 transition-all duration-100 overflow-hidden bg-list backdrop-blur-sm border-border/50">
               <div className={`h-32 ${board.background} relative`}>
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300"></div>
@@ -74,8 +81,8 @@ const BoardList = ({ boards }: { boards: Board[] }) => {
 
       {/* Create New Board Card */}
       <Card
-        className="group hover:ring-1 hover:ring-ring/40 transition-all duration-100 bg-list backdrop-blur-sm border-border/50 border-dashed"
-        onClick={() => setIsModalOpen(true)}
+        className="group hover:ring-1 hover:ring-ring/40 transition-all duration-100 bg-list backdrop-blur-sm border-border/50 border-dashed cursor-pointer"
+        onClick={() => setIsCreateBoardModalOpen(true)}
       >
         <CardContent className="p-6 h-full flex flex-col items-center justify-center text-center">
           <div className="bg-primary/10 p-4 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
@@ -91,8 +98,8 @@ const BoardList = ({ boards }: { boards: Board[] }) => {
       </Card>
 
       <CreateBoardModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isCreateBoardModalOpen}
+        onClose={() => setIsCreateBoardModalOpen(false)}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { ThemeToggle } from "@/components/global/theme-toggle";
-import { CircleCheckBig } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { CircleCheckBig, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -10,13 +10,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ref, useContext } from "react";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { Ref } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import AuthContext from "@/contexts/AuthContext";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import useLogout from "@/hooks/auth/useLogout";
+import { SidebarTrigger } from "../ui/sidebar";
 
 export const Navbar = ({
   isLoggedIn,
@@ -25,22 +22,9 @@ export const Navbar = ({
   isLoggedIn: boolean;
   navbarRef?: Ref<HTMLElement>;
 }) => {
-  const navigate = useNavigate();
-
-  const { clearUser } = useContext(AuthContext);
-
   const isMobile = useIsMobile();
 
-  const { mutate } = useMutation({
-    mutationFn: () => {
-      return axios.post(`${API_URL}/users/logout`);
-    },
-    onSuccess: () => {
-      clearUser();
-
-      navigate("/");
-    },
-  });
+  const { mutate } = useLogout();
 
   return (
     <nav
@@ -49,7 +33,7 @@ export const Navbar = ({
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link
-          to={isLoggedIn ? "/dashboard" : "/"}
+          to={isLoggedIn ? "/dashboard/boards" : "/"}
           className="flex items-center gap-2"
         >
           <div className="bg-gradient-primary p-2 rounded-lg shadow-primary/30 shadow-sm">
@@ -62,6 +46,10 @@ export const Navbar = ({
 
         <div className="flex items-center gap-4">
           {!isMobile && <ThemeToggle />}
+          {isMobile && (
+            <SidebarTrigger className="h-10 w-10" variant="outline" />
+          )}
+
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
