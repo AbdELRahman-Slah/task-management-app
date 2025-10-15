@@ -8,9 +8,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 interface SortableProps {
   id: string;
   list: List;
+  isTempList: boolean;
 }
 
-const SortableList = (props: SortableProps) => {
+const SortableList = ({ id, list, isTempList }: SortableProps) => {
   const {
     attributes,
     listeners,
@@ -20,11 +21,12 @@ const SortableList = (props: SortableProps) => {
     transition,
     isDragging,
   } = useSortable({
-    id: props.id,
+    id: id,
     data: {
       type: "list",
-      list: props.list,
+      list: list,
     },
+    disabled: isTempList,
   });
 
   const [listHeight, setListHeight] = useState<number>(0);
@@ -33,17 +35,19 @@ const SortableList = (props: SortableProps) => {
     transform: CSS.Transform.toString(transform),
     transition: transition,
     opacity: isDragging ? 0.4 : null,
+    cursor: isTempList ? "not-allowed" : null,
   };
 
   return (
     <div ref={setNodeRef} style={style} className={`h-full task-card`}>
       {!isDragging && (
         <TaskList
-          list={props.list}
+          list={list}
           setActivatorNodeRef={setActivatorNodeRef}
           attributes={attributes}
           listeners={listeners}
           setListHeight={setListHeight}
+          isTempList={isTempList}
         />
       )}
 

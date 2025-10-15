@@ -7,12 +7,18 @@ import useCreateCard from "@/hooks/cards/useCreateCard";
 import { Card } from "@/types/card.types";
 import { v4 as uuidv4, v4 } from "uuid";
 
-const AddNewCard = ({ listId, cards }: { listId: string; cards: Card[] }) => {
+const AddNewCard = ({
+  listId,
+  cards,
+  createCard,
+}: {
+  listId: string;
+  cards: Card[];
+  createCard: (card: Card) => void;
+}) => {
   const { boardId } = useParams();
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [cardTitle, setCardTitle] = useState("");
-
-  const { createCard } = useCreateCard();
 
   const handleSaveChange = () => {
     const trimmedCardTitle = cardTitle.trim();
@@ -32,8 +38,6 @@ const AddNewCard = ({ listId, cards }: { listId: string; cards: Card[] }) => {
     setCardTitle("");
     setIsAddingCard(false);
   };
-
-  // TODO: add loading indicator to return real id
 
   return isAddingCard ? (
     <div className="w-full">

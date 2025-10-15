@@ -39,7 +39,9 @@ const useDeleteList = () => {
         variant: "default",
       });
 
-      deleteMultipleCards(context?.cardsInListIds);
+      if (context?.cardsInListIds.length > 0) {
+        deleteMultipleCards(context?.cardsInListIds);
+      }
     },
     onError: (_, __, context) => {
       setLists((lists) => {

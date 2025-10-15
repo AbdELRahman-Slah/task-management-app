@@ -1,17 +1,20 @@
 import { Plus, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import CustomTextarea from "../global/CustomTextarea";
-import useCreateList from "@/hooks/lists/useCreateList";
 import { v4 as uuidv4 } from "uuid";
-import Lists from "./Lists";
-// import Lists from "./Lists";
+import { List } from "@/types/list.types";
 
-export default function AddNewList({ listsLength }: { listsLength: number }) {
+export default function AddNewList({
+  listsLength,
+  createList,
+}: {
+  listsLength: number;
+  createList: (list: List) => void;
+}) {
   const [listTitle, setListTitle] = useState("");
   const [isAddingList, setIsAddingList] = useState(false);
-  const { createList } = useCreateList();
 
   const handleSaveChange = () => {
     if (listTitle.trim()) {
@@ -24,8 +27,6 @@ export default function AddNewList({ listsLength }: { listsLength: number }) {
     setListTitle("");
     setIsAddingList(false);
   };
-
-  // TODO: add loading indicator to return real id
 
   return (
     <Card className="min-w-[300px] bg-list shadow-sm backdrop-blur-sm border-border/50 border-dashed h-fit task-card">

@@ -20,6 +20,7 @@ import useDragHandlers from "@/hooks/useDragHandlers";
 import TaskListOverlay from "./TaskListOverlay";
 import TaskCardOverlay from "./TaskCardOverlay";
 import { Skeleton } from "../ui/skeleton";
+import useCreateList from "@/hooks/lists/useCreateList";
 
 const Lists = () => {
   const {
@@ -49,6 +50,7 @@ const Lists = () => {
       },
     })
   );
+  const { createList, context: tempList } = useCreateList();
 
   const listIds = lists?.map(({ _id }) => _id);
 
@@ -81,11 +83,16 @@ const Lists = () => {
             >
               {lists.map((list) => {
                 return (
-                  <SortableList id={list._id} list={list} key={list._id} />
+                  <SortableList
+                    id={list._id}
+                    list={list}
+                    key={list._id}
+                    isTempList={tempList?._id === list._id}
+                  />
                 );
               })}
 
-              <AddNewList listsLength={lists.length} />
+              <AddNewList listsLength={lists.length} createList={createList} />
             </ScrollContainer>
           </SortableContext>
 

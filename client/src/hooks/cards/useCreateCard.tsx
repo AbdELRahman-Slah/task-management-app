@@ -30,6 +30,10 @@ const useCreateCard = () => {
       );
     },
 
+    onMutate: (cardData) => {
+      return cardData;
+    },
+
     onSuccess: (data, card) => {
       queryClient.invalidateQueries({ queryKey: ["cards", boardId] });
 
@@ -47,6 +51,8 @@ const useCreateCard = () => {
 
         return [...cardsWithoutNewCard, data.data.data.card];
       });
+
+      return card;
     },
 
     onError: (error, cardData) => {

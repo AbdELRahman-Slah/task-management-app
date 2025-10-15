@@ -5,8 +5,15 @@ import { Textarea } from "../ui/textarea";
 import useUpdateCard from "@/hooks/cards/useUpdateCard";
 import { Trash2Icon } from "lucide-react";
 import useDeleteCard from "@/hooks/cards/useDeleteCard";
+import { cn } from "@/lib/utils";
 
-export const TaskCard = ({ card }: { card: CardType }) => {
+export const TaskCard = ({
+  card,
+  isTempCard,
+}: {
+  card: CardType;
+  isTempCard;
+}) => {
   const [titleEdit, setTitleEdit] = useState<boolean>(false);
   const [cardTitle, setCardTitle] = useState<string>(card.title);
 
@@ -44,7 +51,10 @@ export const TaskCard = ({ card }: { card: CardType }) => {
     />
   ) : (
     <Card
-      className="active:cursor-grabbing bg-card hover:shadow-soft border-border/50 h-20 rounded-sm md:touch-none"
+      className={cn(
+        "active:cursor-grabbing bg-card hover:shadow-soft border-border/50 h-20 rounded-sm md:touch-none",
+        isTempCard && "bg-[#323742] pointer-events-none"
+      )}
       onClick={() => setTitleEdit(!titleEdit)}
     >
       <CardContent className="p-4 h-full">
@@ -52,15 +62,17 @@ export const TaskCard = ({ card }: { card: CardType }) => {
           <h4 className="font-medium text-sm text-foreground leading-snug">
             {card.title}
           </h4>
-          <button
-            className="self-center bg-card hover:bg-red-950 p-2 rounded"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteCard();
-            }}
-          >
-            <Trash2Icon size={20} className="stroke-gray-300" />
-          </button>
+          {isTempCard || (
+            <button
+              className="self-center bg-card hover:bg-red-950 p-2 rounded"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteCard();
+              }}
+            >
+              <Trash2Icon size={20} className="stroke-gray-300" />
+            </button>
+          )}
         </div>
       </CardContent>
     </Card>
