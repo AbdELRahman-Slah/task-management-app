@@ -8,6 +8,14 @@ const {
 } = require("../utils/generateUserToken");
 const ms = require("ms");
 
+const isProduction = process.env.NODE_ENV === "production";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+};
+
 const registerUser = catchWrapper(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -61,17 +69,13 @@ const loginUser = catchWrapper(async (req, res, next) => {
   const refreshTokenExpiresIn = ms(process.env.REFRESH_TOKEN_EXPIRES_IN);
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    ...cookieOptions,
     path: "/",
     maxAge: accessTokenExpiresIn,
   });
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    ...cookieOptions,
     path: "/api/users/refresh",
     maxAge: refreshTokenExpiresIn,
   });
@@ -124,9 +128,7 @@ const refreshUserSession = catchWrapper(async (req, res, next) => {
   const accessTokenExpiresIn = ms(process.env.ACCESS_TOKEN_EXPIRES_IN);
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    ...cookieOptions,
     maxAge: accessTokenExpiresIn,
   });
 
@@ -138,12 +140,16 @@ const refreshUserSession = catchWrapper(async (req, res, next) => {
 });
 
 const logoutUser = catchWrapper(async (req, res, next) => {
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken", { path: "/api/users/refresh" });
+  res.clearCookie("accessToken", { ...cookieOptions, path: "/" });
+  res.clearCookie("refreshToken", {
+    ...cookieOptions,
+    path: "/api/users/refresh",
+  });
 
   res.status(200).json({
     status: "success",
     data: null,
+    message: "Successfully logged out",
   });
 });
 
