@@ -1,8 +1,7 @@
-import { LoginApiResponse, User } from "@/types/user.types";
+import { LoginApiResponse } from "@/types/user.types";
 import {
   useQueryClient,
   useQuery,
-  UseQueryResult,
 } from "@tanstack/react-query";
 import useApiRequest from "../useApiRequest";
 

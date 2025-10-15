@@ -46,7 +46,7 @@ export const Navbar = ({
 
         <div className="flex items-center gap-4">
           {!isMobile && <ThemeToggle />}
-          {isMobile && (
+          {isMobile && isLoggedIn && (
             <SidebarTrigger className="h-10 w-10" variant="outline" />
           )}
 
