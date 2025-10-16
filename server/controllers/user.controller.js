@@ -8,11 +8,9 @@ const {
 } = require("../utils/generateUserToken");
 const ms = require("ms");
 
-const isProduction = process.env.NODE_ENV === "production";
-
 const cookieOptions = {
   httpOnly: true,
-  secure: isProduction,
+  secure: true,
   sameSite: "none",
 };
 
