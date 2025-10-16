@@ -1,6 +1,5 @@
-import { Button } from "../ui/button";
 import { ThemeToggle } from "@/components/global/theme-toggle";
-import { CircleCheckBig, Menu } from "lucide-react";
+import { CircleCheckBig } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -10,47 +9,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ref } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import useLogout from "@/hooks/auth/useLogout";
-import { SidebarTrigger } from "../ui/sidebar";
 
-export const Navbar = ({
-  isLoggedIn,
-  navbarRef = null,
-}: {
-  isLoggedIn: boolean;
-  navbarRef?: Ref<HTMLElement>;
-}) => {
+const BoardNavbar = () => {
   const isMobile = useIsMobile();
 
   const { mutate } = useLogout();
 
   return (
-    <nav
-      className="bg-card backdrop-blur-sm border-b border-border/50 px-6 py-4"
-      ref={navbarRef}
-    >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link
-          to={isLoggedIn ? "/dashboard/boards" : "/"}
-          className="flex items-center gap-2"
-        >
-          <div className="bg-gradient-primary p-2 rounded-lg shadow-primary/30 shadow-sm">
-            <CircleCheckBig className="h-6 w-6 text-primary-foreground" />
-          </div>
-          {!isMobile && (
-            <span className="text-xl font-bold text-foreground">TaskFlow</span>
-          )}
-        </Link>
+    <header>
+      <nav className="bg-[#000]/65 shadow-md backdrop-blur-md px-7 py-4">
+        <div className="mx-auto flex items-center justify-between">
+          <Link to={"/dashboard/boards"} className="flex items-center gap-2">
+            <div className="bg-gradient-primary p-2 rounded-lg shadow-primary/30 shadow-sm">
+              <CircleCheckBig className="h-6 w-6 text-primary-foreground" />
+            </div>
+            {!isMobile && (
+              <span className="text-xl font-bold text-foreground">
+                TaskFlow
+              </span>
+            )}
+          </Link>
 
-        <div className="flex items-center gap-4">
-          {!isMobile && <ThemeToggle />}
-          {isMobile && isLoggedIn && (
-            <SidebarTrigger className="h-10 w-10" variant="outline" />
-          )}
+          <div className="flex items-center gap-4">
+            {!isMobile && <ThemeToggle />}
 
-          {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar>
@@ -79,20 +63,11 @@ export const Navbar = ({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <>
-              <Link to="/login">
-                <Button variant="ghost">Login</Button>
-              </Link>
-              <Link to="/signup">
-                <Button variant="default" className="bg-gradient-primary">
-                  Sign Up
-                </Button>
-              </Link>
-            </>
-          )}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 };
+
+export default BoardNavbar;

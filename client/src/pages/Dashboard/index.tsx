@@ -1,7 +1,7 @@
-import { Navbar } from "@/components/global/Navbar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { Outlet, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import DashboardNavbar from "@/components/dashboard/DashboardNavbar";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -15,7 +15,7 @@ const Dashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen w-full bg-gradient-to-br from-background via-accent/10 to-background">
-        <Navbar isLoggedIn={true} />
+        <DashboardNavbar />
 
         <div className="flex items-start gap-10 px-2 md:px-10 lg:px-20 py-10">
           <DashboardSidebar />

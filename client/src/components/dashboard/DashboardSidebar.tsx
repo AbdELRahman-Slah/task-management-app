@@ -42,7 +42,7 @@ function DashboardSidebar() {
       className={"border rounded-md h-96 w-72"}
     >
       <SidebarHeader>
-        <h2 className="text-white font-bold text-2xl border bg-muted rounded-md text-center py-4">
+        <h2 className="text-black dark:text-white font-bold text-2xl border bg-muted rounded-md text-center py-4">
           Dashboard
         </h2>
       </SidebarHeader>

@@ -69,7 +69,7 @@ const Lists = () => {
             strategy={horizontalListSortingStrategy}
           >
             <ScrollContainer
-              className="flex gap-6 px-6 overflow-x-auto select-none flex-grow pb-16 h-full scroll-container"
+              className="flex gap-6 px-6 overflow-x-auto select-none flex-grow h-full pb-24 scroll-container"
               horizontal
               vertical={false}
               hideScrollbars={false}

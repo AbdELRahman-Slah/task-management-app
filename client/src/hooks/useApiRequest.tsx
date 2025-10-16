@@ -1,10 +1,16 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "./use-toast";
 import AuthContext from "@/contexts/AuthContext";
 import { useContext } from "react";
+import axiosRetry from "axios-retry";
 
 const API_URL = import.meta.env.VITE_API_URL;
+
+axiosRetry(axios, {
+  retries: 3,
+  retryDelay: (retryCount) => retryCount * 1000,
+  retryCondition: (error) => error.response?.status >= 500,
+});
 
 const useApiRequest = () => {
   const navigate = useNavigate();

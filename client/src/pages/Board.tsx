@@ -1,23 +1,14 @@
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { Navbar } from "@/components/global/Navbar";
+import { useEffect, useState } from "react";
 import Lists from "@/components/board/Lists";
 import BoardContextProvider from "@/providers/BoardContextProvider";
-import { BoardContext } from "@/contexts/BoardContext";
 import useGetSingleBoard from "@/hooks/boards/useGetSingleBoard";
+import BoardNavbar from "@/components/board/BoardNavbar";
+import Loader from "@/components/global/Loader";
 
 const Board = () => {
-  const [boardHeight, setBoardHeight] = useState(0);
-  const navbarRef = useRef<HTMLElement>(null);
-
   const [boardBackground, setBoardBackground] = useState<string>("");
 
-  const { data, isPending } = useGetSingleBoard();
+  const { data, isLoading } = useGetSingleBoard();
 
   useEffect(() => {
     if (data) {
@@ -25,19 +16,15 @@ const Board = () => {
     }
   }, [data]);
 
-  useLayoutEffect(() => {
-    const { height } = navbarRef.current.getBoundingClientRect();
-
-    const boardHeight = window.innerHeight - height;
-
-    setBoardHeight(boardHeight);
-  }, [setBoardHeight]);
+  console.log(isLoading);
 
   return (
-    <div className={`min-h-screen  ${boardBackground}`}>
-      <Navbar isLoggedIn={true} navbarRef={navbarRef} />
-      {isPending || (
-        <div className={`mx-auto pt-8`} style={{ height: boardHeight }}>
+    <div className={`h-screen  ${boardBackground}`}>
+      <BoardNavbar />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className={`mx-auto pt-8 h-[90%]`}>
           <BoardContextProvider>
             <Lists />
           </BoardContextProvider>
